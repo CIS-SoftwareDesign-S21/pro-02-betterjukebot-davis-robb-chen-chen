@@ -21,6 +21,8 @@ async def on_ready():
 async def hello_world(ctx):
     await ctx.send("Hello World!")
 
+async def soup(ctx):
+    await ctx.send("Soup!")
 
 # Running the bot
 client.run(TOKEN)
