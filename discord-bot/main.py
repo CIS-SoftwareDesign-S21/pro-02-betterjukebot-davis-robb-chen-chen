@@ -21,8 +21,14 @@ async def on_ready():
 async def hello_world(ctx):
     await ctx.send("Hello World!")
 
+
 async def soup(ctx):
     await ctx.send("Soup!")
+
+
+async def goober(ctx):
+    await ctx.send("Becca")
+
 
 # Running the bot
 client.run(TOKEN)
