@@ -22,10 +22,12 @@ async def hello_world(ctx):
     await ctx.send("Hello World!")
 
 
+@client.command()
 async def soup(ctx):
     await ctx.send("Soup!")
 
 
+@client.command()
 async def goober(ctx):
     await ctx.send("Becca")
 
