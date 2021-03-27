@@ -8,12 +8,14 @@
 
 ***
 ### Vision:
+
 This is for users of Discord who listen to music from multiple sources. The Better JukeBot
 will serve as a music player bot within a Discord server that will allow the user to
 play the music from the library of their choosing. Unlike typical music bots which usually 
 support just one music source, our bot will allow users to grab music from multiple music
 source APIs along with additional moderation and commands. 
 ***
+
 ### How to Install:
 
 ***
