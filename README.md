@@ -8,7 +8,11 @@
 
 ***
 ### Vision:
-
+This is for users of Discord who listen to music from multiple sources. The Better JukeBot
+will serve as a music player bot within a Discord server that will allow the user to
+play the music from the library of their choosing. Unlike typical music bots which usually 
+support just one music source, our bot will allow users to grab music from multiple music
+source APIs along with additional moderation and commands. 
 ***
 ### How to Install:
 
@@ -24,8 +28,16 @@ https://miro.com/app/board/o9J_lNsDtMM=/
 ### User Personas:
 
 <a href="https://ibb.co/HNtMWyc"><img src="https://i.ibb.co/bHsySV4/Untitled-User-Persona-1.png" alt="Untitled-User-Persona-1" border="0"></a>
-<a href="https://ibb.co/HPNPcgF"><img src="https://i.ibb.co/z2823fn/Untitled-User-Persona-1-copy-3.png" alt="Untitled-User-Persona-1-copy-3" border="0"></a>
+<a href="https://ibb.co/cYxX70z"><img src="https://i.ibb.co/LNvh2m4/Untitled-User-Persona-1.png" alt="Untitled-User-Persona-1" border="0"></a>
 <a href="https://ibb.co/mCsCKkw"><img src="https://i.ibb.co/HDvDy6s/Untitled-User-Persona-1-copy-2.png" alt="Untitled-User-Persona-1-copy-2" border="0"></a>
 <a href="https://ibb.co/4TNg18s"><img src="https://i.ibb.co/6PsJXHv/Untitled-User-Persona-1-copy.png" alt="Untitled-User-Persona-1-copy" border="0"></a>
 
 ***
+
+
+
+**Contribution:**
+    - Christian M. Davis:
+    - Darren Chen:
+    - Ju-Hung Chen: 
+    - Rebecca Robb: 
