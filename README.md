@@ -38,8 +38,14 @@ https://miro.com/app/board/o9J_lNsDtMM=/
 
 
 
-**Contribution:**
-    - Christian M. Davis:
-    - Darren Chen:
-    - Ju-Hung Chen: 
-    - Rebecca Robb: 
+**Contributions:**
+
+* Christian M. Davis: Created the user persona, Tony, and the minimal project of the hello world bot for the first week.
+    
+* Darren Chen: Created the user persona, Barbra.
+    
+* Ju-Hung Chen: Created the user persona, Akari.
+    
+* Rebecca Robb: Created the user persona, Elleanna. Developed the vision statement with Christian. 
+
+***
