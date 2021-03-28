@@ -29,10 +29,10 @@ https://miro.com/app/board/o9J_lNsDtMM=/
 ***
 ### User Personas:
 
-<a href="https://ibb.co/HNtMWyc"><img src="https://i.ibb.co/bHsySV4/Untitled-User-Persona-1.png" alt="Untitled-User-Persona-1" border="0"></a>
+<a href="https://ibb.co/kHBtx9M"><img src="https://i.ibb.co/0D2xcFQ/Untitled-User-Persona-2.png" alt="Untitled-User-Persona-2" border="0"></a>
 <a href="https://ibb.co/cYxX70z"><img src="https://i.ibb.co/LNvh2m4/Untitled-User-Persona-1.png" alt="Untitled-User-Persona-1" border="0"></a>
 <a href="https://ibb.co/W62dd3V"><img src="https://i.ibb.co/pxLssPh/Untitled-User-Persona.png" alt="Untitled-User-Persona" border="0"></a>
-<a href="https://ibb.co/4TNg18s"><img src="https://i.ibb.co/6PsJXHv/Untitled-User-Persona-1-copy.png" alt="Untitled-User-Persona-1-copy" border="0"></a>
+<a href="https://ibb.co/2Nk4j5M"><img src="https://i.ibb.co/xH7TM3g/Barbara-Masters-Student.png" alt="Barbara-Masters-Student" border="0" /></a>
 
 ***
 
