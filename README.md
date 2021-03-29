@@ -37,6 +37,26 @@ support just one music source, our bot will allow users to grab music from multi
 source APIs along with additional moderation and commands. 
 ***
 
+### Features List:
+Feature List (MVP):
+- play/pause/stop/repeat/seek
+- search from multiple APIs, search from YouTube, Spotify, Apple Music, Soundcloud
+- joining server/voice channel to play the music
+- simple interface - connect and disconnect
+ 
+Expanded Feature List:
+- Display lyrics in text channel
+- Song queues
+- Memes
+- Grab popular playlists
+- Standard moderation tools
+- Disconnect when voice channel is empty
+- Vote to skip song
+- *statistics to show how many times song was played in server
+- *play local files
+
+***
+
 ### How to Install:
 
 ***
