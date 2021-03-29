@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/home/phaceial/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot'],
+             pathex=['/Users/phace/PycharmProjects/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot'],
              binaries=[],
              datas=[],
              hiddenimports=[],
