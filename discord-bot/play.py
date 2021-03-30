@@ -9,7 +9,9 @@ TOKEN = "ODIzNDI0MjQ3ODYyMDAxNjY0.YFgnlw.VZk0hl3tb9iYhNb1I0AdVgvcUqI"
 # Creating the Bot
 client = commands.Bot(command_prefix="!")
 
-
+@client.command()
+async def youtube(ctx, *, search):
+    
 @client.command()
 async def play(ctx, url: str):
     song = os.path.isfile("song.mp3")
