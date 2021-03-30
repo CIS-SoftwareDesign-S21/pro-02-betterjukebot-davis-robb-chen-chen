@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import os
 import youtube_dl
+import bandcamp_dl
 import urllib.parse
 
 # Credentials
@@ -78,6 +79,28 @@ async def play(ctx, url: str):
         if file.endswith(".mp3"):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
+
+
+@bot.command()
+async def playBC(ctx, url: str):
+    song = os.path.isfile("song.mp3")
+    try:
+        if song:
+            os.remove("song.mp3")
+    except PermissionError:
+        await ctx.send(
+            "Cannot play another song until song currently playing is complete"
+        )
+        return
+
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name="General")
+    await voiceChannel.connect()
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            os.rename(file, "song.mp3")
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
+
 
 
 @bot.command()
