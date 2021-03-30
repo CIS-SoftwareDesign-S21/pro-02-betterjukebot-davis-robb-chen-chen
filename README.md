@@ -38,7 +38,7 @@ source APIs along with additional moderation and commands.
 ### Features List:
 Feature List (MVP):
 - play/pause/stop/repeat/seek
-- search from multiple APIs, search from YouTube, Spotify, Apple Music, Soundcloud
+- search from multiple APIs, search from YouTube, Spotify, Soundcloud
 - joining server/voice channel to play the music
 - simple interface - connect and disconnect
  
