@@ -7,7 +7,7 @@
 ### Project Proposal: 
 Description:
 
-Discord is a messaging platform designed for building communities that has become increasingly popular amongst students, gamers, and cohorts. Our concept is to design a music player bot, the Best JukeBot, that can function inside any Discord server. This bot will enable users to listen to music pulled from multiple APIs like Spotify, Apple Music, SoundCloud and YouTube. It will have the basic functionality of a music player: playing, pausing, stopping, repeating, and seeking features. It will also have additional features like a simple interface using PyGui to put the bot online and offline, and post song lyrics and memes.
+Discord is a messaging platform designed for building communities that has become increasingly popular amongst students, gamers, and cohorts. Our concept is to design a music player bot, the Best JukeBot, that can function inside any Discord server. This bot will enable users to listen to music pulled from multiple APIs like SoundCloud, YouTube, Bandcamp, Apple Podcasts, Google Podcasts, and Vimeo. It will have the basic functionality of a music player: playing, pausing, stopping, repeating, and seeking features. It will also have additional features like a simple interface using PyGui to put the bot online and offline, and post song lyrics and memes.
 
 Project Relevance:
 
@@ -38,7 +38,7 @@ source APIs along with additional moderation and commands.
 ### Features List:
 Feature List (MVP):
 - play/pause/stop/repeat/seek
-- search from multiple APIs, search from YouTube, Spotify, Soundcloud
+- search from multiple APIs, search from YouTube, SoundCloud, Vimeo, BandCamp, Apple Podcast, and Google Podcast.
 - joining server/voice channel to play the music
 - simple interface - connect and disconnect
  
@@ -84,6 +84,6 @@ https://miro.com/app/board/o9J_lNsDtMM=/
     
 * Ju-Hung Chen: Created the user persona, Akari.
     
-* Rebecca Robb: Created the user persona, Elleanna. Developed the vision statement with Christian. 
+* Rebecca Robb: I created the user persona, Elleanna. Developed the vision statement with Christian. I also added the goober command for the initial minimal project. I attempted to use the Apple Music API but was stunted by the fact you needed a paid developer account. From this I decided to use BandCamp API. While troubleshooting the bandcamp API library it worked with the existing code that played our youtube API links. 
 
 ***
