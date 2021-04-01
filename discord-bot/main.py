@@ -113,5 +113,11 @@ async def resume(ctx):
         await ctx.send("Voice is not paused")
 
 
+@bot.command()
+async def createinv(ctx):
+    invite = ctx.channel.create_invite()
+    await ctx.send(f"Here's your invite: {invite}")
+
+
 # Running the bot
 bot.run(TOKEN)
