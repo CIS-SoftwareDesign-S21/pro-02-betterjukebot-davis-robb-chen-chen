@@ -4,6 +4,11 @@
 ## Christian M. Davis & Darren Chen & Ju-Hung Chen & Rebecca Robb
 ***
 
+## Add our music bot click button below!
+[![](https://pngimg.com/uploads/buttons/buttons_PNG34.png)](https://discord.com/api/oauth2/authorize?client_id=823424247862001664&permissions=8&scope=bot)
+
+
+
 ### Project Proposal: 
 Description:
 
