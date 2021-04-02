@@ -89,6 +89,6 @@ https://miro.com/app/board/o9J_lNsDtMM=/
     
 * Ju-Hung Chen: Created the user persona, Akari.
     
-* Rebecca Robb: I created the user persona, Elleanna. Developed the vision statement with Christian. I also added the goober command for the initial minimal project. I attempted to use the Apple Music API but was stunted by the fact you needed a paid developer account. From this I decided to use BandCamp API. While troubleshooting the bandcamp API library it worked with the existing code that played our youtube API links. 
+* Rebecca Robb: I created the user persona, Elleanna. Developed the vision statement with Christian. I also added the goober command for the initial minimal project. I attempted to use the Apple Music API but was stunted by the fact you needed a paid developer account. From this I decided to use BandCamp API. While troubleshooting the bandcamp API library I realized it worked with the existing code that played our youtube API links. I created the button on the README.md that gives you a link to invite Pickle Rick into the server.
 
 ***
