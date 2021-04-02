@@ -3,9 +3,8 @@ from discord.ext import commands
 import os
 import youtube_dl
 import urllib.parse
+from secrets import DISCORD_TOKEN
 
-# Credentials
-TOKEN = "ODIzNDI0MjQ3ODYyMDAxNjY0.YFgnlw.VZk0hl3tb9iYhNb1I0AdVgvcUqI"
 
 # Creating the Bot
 bot = commands.Bot(command_prefix="!")
@@ -15,9 +14,6 @@ bot = commands.Bot(command_prefix="!")
 async def on_ready():
     print("Connected to bot: {}".format(bot.user.name))
     print("Bot ID: {}".format(bot.user.id))
-
-
-# Command
 
 
 @bot.command()
@@ -36,13 +32,26 @@ async def goober(ctx):
 
 
 @bot.command()
-async def youtube(ctx, *, search):
-    await ctx.send("Doing youtube searches soon")
+async def repeat(ctx):
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    voice.stop()
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
 
 @bot.command()
 async def seek(ctx, timestamp: int):
-    await ctx.send("Doing seeking soon")
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    voice.stop()
+    voice.play(
+        discord.FFmpegPCMAudio(
+            source="song.mp3",
+            executable="ffmpeg",
+            pipe=False,
+            stderr=None,
+            before_options=None,
+            options="-ss " + str(timestamp),
+        )
+    )
 
 
 @bot.command()
@@ -113,11 +122,5 @@ async def resume(ctx):
         await ctx.send("Voice is not paused")
 
 
-@bot.command()
-async def createinv(ctx):
-    invite = ctx.channel.create_invite()
-    await ctx.send(f"Here's your invite: {invite}")
-
-
 # Running the bot
-bot.run(TOKEN)
+bot.run(DISCORD_TOKEN)
