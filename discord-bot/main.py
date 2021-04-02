@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import os
 import youtube_dl
-import bandcamp_dl
 import urllib.parse
 
 # Credentials
@@ -78,7 +77,7 @@ async def play(ctx, url: str):
     for file in os.listdir("./"):
         if file.endswith(".mp3"):
             os.rename(file, "song.mp3")
-
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
 
 @bot.command()
@@ -94,7 +93,6 @@ async def leave(ctx):
         await voice.disconnect()
     else:
         await ctx.send("The bot is not in a channel.")
-
 
 
 @bot.command()
@@ -113,6 +111,12 @@ async def resume(ctx):
         voice.resume()
     else:
         await ctx.send("Voice is not paused")
+
+
+@bot.command()
+async def createinv(ctx):
+    invite = ctx.channel.create_invite()
+    await ctx.send(f"Here's your invite: {invite}")
 
 
 # Running the bot
