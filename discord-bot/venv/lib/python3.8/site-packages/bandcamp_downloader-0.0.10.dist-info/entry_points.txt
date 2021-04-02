@@ -1,0 +1,3 @@
+[console_scripts]
+bandcamp-dl = bandcamp_dl.__main__:main
+
