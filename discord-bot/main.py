@@ -121,6 +121,22 @@ async def resume(ctx):
     else:
         await ctx.send("Voice is not paused")
 
+@bot.command()
+async def join(ctx, channel: str):
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
+    await voiceChannel.connect()
+
+
+    if Client.voice_clients.isConnected():
+        await ctx.send("Joined voice channel")
+    else:
+        await ctx.send("Cannot join voice channel")
+
+@bot.command()
+async def create(ctx, channel:str):
+    server = ctx.message.server
+    await Client.create_channel(server, channel, type=discord.ChannelType.text)
+    await ctx.send("Channel created")
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
