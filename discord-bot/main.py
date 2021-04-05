@@ -3,7 +3,6 @@ from discord import Client
 from discord.ext import commands
 import os
 import youtube_dl
-import urllib.parse
 from secrets import DISCORD_TOKEN
 
 # Creating the Bot
@@ -127,7 +126,7 @@ async def join(ctx, channel: str):
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
     await voiceChannel.connect()
 
-    if Client.voice_clients.isConnected():
+    if bot.voice_clients.is_voice_connected():
         await ctx.send("Joined voice channel")
     else:
         await ctx.send("Cannot join voice channel")
@@ -135,8 +134,8 @@ async def join(ctx, channel: str):
 
 @bot.command()
 async def create(ctx, channel: str):
-    server = ctx.message.server
-    await Client.create_channel(Client.server, channel, type=discord.ChannelType.voice)
+
+    await bot.create_channel(bot.get_server, channel, type=discord.ChannelType.voice)
     await ctx.send("Channel created")
 
 
