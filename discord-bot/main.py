@@ -1,14 +1,18 @@
 import discord
 from discord.ext import commands
 import os
+import asyncio
 import youtube_dl
-import urllib.parse
+# import musixmatch
 from secrets import DISCORD_TOKEN
 
-
 # Creating the Bot
+bot = discord.Client()
 bot = commands.Bot(command_prefix="!")
-
+global channel_default
+channel_default = "General"
+global created_channels
+created_channels = []
 
 @bot.event
 async def on_ready():
@@ -29,6 +33,16 @@ async def soup(ctx):
 @bot.command()
 async def goober(ctx):
     await ctx.send("Becca")
+
+
+@bot.command()
+async def angry(ctx):
+    await ctx.send(":angry:")
+
+
+@bot.command()
+async def angryarray(ctx):
+    await ctx.send(":angry::rage::angry:\n:rage::angry::rage:""\n:angry::rage::angry:")
 
 
 @bot.command()
@@ -66,8 +80,10 @@ async def play(ctx, url: str):
         )
         return
 
-    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name="General")
+    print(channel_default)
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
     await voiceChannel.connect()
+
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
     ydl_opts = {
@@ -87,6 +103,19 @@ async def play(ctx, url: str):
         if file.endswith(".mp3"):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
+
+    # checks for idle channel
+    while voice.is_playing():
+        await asyncio.sleep(1)
+    else:
+        await asyncio.sleep(15)
+        while voice.is_playing():
+            break
+        else:
+            await voice.disconnect()
+            for created in created_channels:
+                if voiceChannel == created:
+                    await voiceChannel.delete()
 
 
 @bot.command()
@@ -120,6 +149,49 @@ async def resume(ctx):
         voice.resume()
     else:
         await ctx.send("Voice is not paused")
+
+
+@bot.command()
+async def joinchannel(ctx, channel: str):
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
+    await voiceChannel.connect()
+
+
+@bot.command()
+async def create(ctx, channel: str):
+    guild = ctx.message.guild
+
+    await guild.create_voice_channel(channel)
+    await ctx.send("Channel created")
+
+    global created_channels
+    created_channels.append(discord.utils.get(ctx.guild.channels, name=channel))
+
+
+@bot.command()
+async def remove(ctx, channel: str):
+    existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
+
+    if existing_channel is not None:
+        await existing_channel.delete()
+    else:
+        await ctx.send(f'No channel named "{channel}" was found')
+
+
+@bot.command()
+async def setchannel(ctx, channel: str):
+    existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
+    global channel_default
+
+    if existing_channel is not None:
+        channel_default = channel
+        await ctx.send(f'set default playing channel to "{channel}"')
+    else:
+        await ctx.send(f'No channel named "{channel}" was found')
+        await ctx.send("Please create the channel first")
+
+    print(channel_default)
+
 
 
 # Running the bot
