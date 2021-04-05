@@ -68,7 +68,7 @@ async def seek(ctx, timestamp: int):
 
 
 @bot.command()
-async def play(ctx, url: str):
+async def play(ctx, url: str, *args):
     song = os.path.isfile("song.mp3")
     try:
         if song:
@@ -80,8 +80,18 @@ async def play(ctx, url: str):
         return
 
     print(channel_default)
-    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
-    await voiceChannel.connect()
+    for ar in args:
+        optional_channel = ar
+    if optional_channel is not channel_default or None:
+        # code taken from create function
+        guild = ctx.message.guild
+        await guild.create_voice_channel(channel)
+        await ctx.send("Channel created")
+        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=optional_channel)
+        await voiceChannel.connect()
+    else:
+        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
+        await voiceChannel.connect()
 
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
