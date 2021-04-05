@@ -11,7 +11,8 @@ bot = discord.Client()
 bot = commands.Bot(command_prefix="!")
 global channel_default
 channel_default = "General"
-
+global created_channels
+created_channels = []
 
 @bot.event
 async def on_ready():
@@ -68,7 +69,7 @@ async def seek(ctx, timestamp: int):
 
 
 @bot.command()
-async def play(ctx, url: str, *args):
+async def play(ctx, url: str):
     song = os.path.isfile("song.mp3")
     try:
         if song:
@@ -80,18 +81,8 @@ async def play(ctx, url: str, *args):
         return
 
     print(channel_default)
-    for ar in args:
-        optional_channel = ar
-    if optional_channel is not channel_default or None:
-        # code taken from create function
-        guild = ctx.message.guild
-        await guild.create_voice_channel(channel)
-        await ctx.send("Channel created")
-        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=optional_channel)
-        await voiceChannel.connect()
-    else:
-        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
-        await voiceChannel.connect()
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
+    await voiceChannel.connect()
 
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
@@ -122,6 +113,9 @@ async def play(ctx, url: str, *args):
             break
         else:
             await voice.disconnect()
+            for created in created_channels:
+                if voiceChannel == created:
+                    await voiceChannel.delete()
 
 
 @bot.command()
@@ -169,6 +163,9 @@ async def create(ctx, channel: str):
 
     await guild.create_voice_channel(channel)
     await ctx.send("Channel created")
+
+    global created_channels
+    created_channels.append(discord.utils.get(ctx.guild.channels, name=channel))
 
 
 @bot.command()
