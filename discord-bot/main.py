@@ -91,41 +91,6 @@ async def play(ctx, url: str):
 
 
 @bot.command()
-async def play(ctx, channel: str, url: str):
-    song = os.path.isfile("song.mp3")
-    try:
-        if song:
-            os.remove("song.mp3")
-    except PermissionError:
-        await ctx.send(
-            "Cannot play another song until song currently playing is complete"
-        )
-        return
-
-    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
-    await voiceChannel.connect()
-    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
-
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "192",
-            }
-        ],
-    }
-
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
-    for file in os.listdir("./"):
-        if file.endswith(".mp3"):
-            os.rename(file, "song.mp3")
-    voice.play(discord.FFmpegPCMAudio("song.mp3"))
-
-
-@bot.command()
 async def stop(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
