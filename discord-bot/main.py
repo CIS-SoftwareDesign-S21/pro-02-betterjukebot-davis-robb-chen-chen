@@ -55,7 +55,7 @@ async def seek(ctx, timestamp: int):
 
 
 @bot.command()
-async def play(ctx, url: str):
+async def play(ctx, channel: str, url: str):
     song = os.path.isfile("song.mp3")
     try:
         if song:
@@ -66,7 +66,7 @@ async def play(ctx, url: str):
         )
         return
 
-    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name="General")
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
     await voiceChannel.connect()
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
