@@ -6,6 +6,7 @@ import youtube_dl
 from secrets import DISCORD_TOKEN
 
 # Creating the Bot
+bot = discord.Client()
 bot = commands.Bot(command_prefix="!")
 
 
@@ -135,7 +136,7 @@ async def join(ctx, channel: str):
 @bot.command()
 async def create(ctx, channel: str):
 
-    await bot.create_channel(bot.get_server, channel, type=discord.ChannelType.voice)
+    await discord.create_channel(bot.get_server, channel, type=discord.ChannelType.voice)
     await ctx.send("Channel created")
 
 
