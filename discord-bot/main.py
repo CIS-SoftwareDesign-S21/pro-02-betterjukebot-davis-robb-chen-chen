@@ -56,7 +56,7 @@ async def seek(ctx, timestamp: int):
 
 
 @bot.command()
-async def play(ctx, channel:str, url: str):
+async def play(ctx, url: str):
     song = os.path.isfile("song.mp3")
     try:
         if song:
@@ -66,12 +66,10 @@ async def play(ctx, channel:str, url: str):
             "Cannot play another song until song currently playing is complete"
         )
         return
-    if channel is None:
-        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
-        await voiceChannel.connect()
-    else:
-        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
-        await voiceChannel.connect()
+
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
+    await voiceChannel.connect()
+
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
     ydl_opts = {
@@ -156,7 +154,7 @@ async def setchannel(ctx, channel: str):
 
     if existing_channel is not None:
         channel_default = channel
-        await ctx.send(f'set to "{channel}"')
+        await ctx.send(f'set default playing channel to "{channel}"')
     else:
         await ctx.send(f'No channel named "{channel}" was found')
         await ctx.send("Please create the channel first")
