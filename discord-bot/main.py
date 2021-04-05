@@ -32,6 +32,9 @@ async def soup(ctx):
 async def goober(ctx):
     await ctx.send("Becca")
 
+@bot.command()
+async def angry(ctx):
+    await ctx.send(":angry:")
 
 @bot.command()
 async def repeat(ctx):
