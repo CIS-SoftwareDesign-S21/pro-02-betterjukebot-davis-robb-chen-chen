@@ -137,10 +137,17 @@ async def join(ctx, channel: str):
 @bot.command()
 async def create(ctx, channel: str):
     guild = ctx.message.guild
-    await guild.create_voice_channel(channel)
 
+    await guild.create_voice_channel(channel)
     await ctx.send("Channel created")
 
+
+@bot.command()
+async def remove(ctx, channel: str):
+    guild = ctx.message.guild
+
+    await guild.remove_channel(channel)
+    await ctx.send("Channel removed")
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
