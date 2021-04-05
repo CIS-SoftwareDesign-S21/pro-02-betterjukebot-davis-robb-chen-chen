@@ -8,6 +8,7 @@ from secrets import DISCORD_TOKEN
 # Creating the Bot
 bot = discord.Client()
 bot = commands.Bot(command_prefix="!")
+global channel_default
 channel_default = "General"
 
 
@@ -67,6 +68,7 @@ async def play(ctx, url: str):
         )
         return
 
+    print(channel_default)
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
     await voiceChannel.connect()
 
@@ -151,6 +153,7 @@ async def remove(ctx, channel: str):
 @bot.command()
 async def setchannel(ctx, channel: str):
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
+    global channel_default
 
     if existing_channel is not None:
         channel_default = channel
@@ -158,6 +161,8 @@ async def setchannel(ctx, channel: str):
     else:
         await ctx.send(f'No channel named "{channel}" was found')
         await ctx.send("Please create the channel first")
+
+    print(channel_default)
 
 
 # Running the bot
