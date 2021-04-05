@@ -1,7 +1,6 @@
 import discord
 from discord import Client
 from discord.ext import commands
-from discord.ext import tasks
 import os
 import youtube_dl
 from secrets import DISCORD_TOKEN
@@ -96,6 +95,16 @@ async def play(ctx, url: str):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
+    # checks for idle channel
+    while voice.is_playing():
+        await asyncio.sleep(1)
+    else:
+        await asyncio.sleep(15)
+        while voice.is_playing():
+            break
+        else:
+            await voice.disconnect()
+
 
 @bot.command()
 async def stop(ctx):
@@ -169,15 +178,6 @@ async def setchannel(ctx, channel: str):
     print(channel_default)
 
 
-@tasks.loop(seconds = 10)
-async def idle_channel(ctx):
-    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
-    if voice.is_connected():
-        member_count = len(voice.members)
-        if member_count == 1:
-            await voice.disconnect()
-
-idle_channel.start()
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
