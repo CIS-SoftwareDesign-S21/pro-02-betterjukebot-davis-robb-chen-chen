@@ -136,7 +136,7 @@ async def join(ctx, channel: str):
 @bot.command()
 async def create(ctx, channel: str):
     server = ctx.message.server
-    await Client.create_channel(server, channel, type=discord.ChannelType.text)
+    await Client.create_channel(Client.server, channel, type=discord.ChannelType.voice)
     await ctx.send("Channel created")
 
 
