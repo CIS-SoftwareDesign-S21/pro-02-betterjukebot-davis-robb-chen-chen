@@ -2,6 +2,7 @@ import discord
 from discord import Client
 from discord.ext import commands
 import os
+import asyncio
 import youtube_dl
 from secrets import DISCORD_TOKEN
 
