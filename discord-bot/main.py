@@ -8,7 +8,7 @@ from secrets import DISCORD_TOKEN
 # Creating the Bot
 bot = discord.Client()
 bot = commands.Bot(command_prefix="!")
-channel_name = "General"
+channel_default = "General"
 
 
 @bot.event
@@ -56,7 +56,7 @@ async def seek(ctx, timestamp: int):
 
 
 @bot.command()
-async def play(ctx, url: str):
+async def play(ctx, channel:str, url: str):
     song = os.path.isfile("song.mp3")
     try:
         if song:
@@ -66,9 +66,12 @@ async def play(ctx, url: str):
             "Cannot play another song until song currently playing is complete"
         )
         return
-
-    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_name)
-    await voiceChannel.connect()
+    if channel is None:
+        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
+        await voiceChannel.connect()
+    else:
+        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
+        await voiceChannel.connect()
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
     ydl_opts = {
@@ -152,9 +155,10 @@ async def setchannel(ctx, channel: str):
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
 
     if existing_channel is not None:
-        channel_name = channel
+        channel_default = channel
+        await ctx.send(f'set to "{channel}"')
     else:
-        await ctx.send(f'No channel named, "{channel}", was found')
+        await ctx.send(f'No channel named "{channel}" was found')
         await ctx.send("Please create the channel first")
 
 
