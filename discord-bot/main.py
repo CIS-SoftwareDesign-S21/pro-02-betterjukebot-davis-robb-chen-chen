@@ -138,10 +138,13 @@ async def create(ctx, channel: str):
 
 @bot.command()
 async def remove(ctx, channel: str):
-    guild = ctx.message.guild
+    existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
 
-    await guild.remove_voice_channel(channel)
-    await ctx.send("Channel removed")
+    if existing_channel is not None:
+        await existing_channel.delete()
+    else:
+        await ctx.send(f'No channel named, "{channel}", was found')
+
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
