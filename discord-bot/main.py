@@ -1,6 +1,7 @@
 import discord
 from discord import Client
 from discord.ext import commands
+from discord.ext import tasks
 import os
 import youtube_dl
 from secrets import DISCORD_TOKEN
@@ -167,6 +168,16 @@ async def setchannel(ctx, channel: str):
 
     print(channel_default)
 
+
+@tasks.loop(seconds = 10)
+async def idle_channel():
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if voice.is_connected():
+        member_count = len(voice.members)
+        if member_count == 1:
+            await voice.disconnect()
+
+idle_channel.start()
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
