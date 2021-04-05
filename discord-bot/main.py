@@ -147,7 +147,7 @@ async def remove(ctx, channel: str):
     if existing_channel is not None:
         await existing_channel.delete()
     else:
-        await ctx.send(f'No channel named, "{channel}", was found')
+        await ctx.send(f'No channel named "{channel}" was found')
 
 
 @bot.command()
