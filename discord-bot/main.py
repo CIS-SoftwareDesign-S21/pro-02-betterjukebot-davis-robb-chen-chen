@@ -1,9 +1,9 @@
 import discord
-from discord import Client
 from discord.ext import commands
 import os
 import asyncio
 import youtube_dl
+import musixmatch
 from secrets import DISCORD_TOKEN
 
 # Creating the Bot
@@ -33,9 +33,16 @@ async def soup(ctx):
 async def goober(ctx):
     await ctx.send("Becca")
 
+
 @bot.command()
 async def angry(ctx):
     await ctx.send(":angry:")
+
+
+@bot.command()
+async def angryarray(ctx):
+    await ctx.send(":angry::rage::angry:\n:rage::angry::rage:""\n:angry::rage::angry:")
+
 
 @bot.command()
 async def repeat(ctx):
