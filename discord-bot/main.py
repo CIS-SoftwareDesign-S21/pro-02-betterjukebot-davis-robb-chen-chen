@@ -181,9 +181,16 @@ async def remove(ctx, channel: str):
 @bot.command()
 async def setchannel(ctx, channel: str):
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     global channel_default
 
-    if existing_channel is not None:
+    if existing_channel is not None and voice.is_playing():
+        channel_default = channel
+        await voice.pause
+        await voice.disconnect
+        await existing_channel.connect
+        await ctx.send(f'switching playing channel to "{channel}"')
+    elif existing_channel is not None and not voice.is_playing():
         channel_default = channel
         await ctx.send(f'set default playing channel to "{channel}"')
     else:
@@ -191,7 +198,6 @@ async def setchannel(ctx, channel: str):
         await ctx.send("Please create the channel first")
 
     print(channel_default)
-
 
 
 # Running the bot
