@@ -170,7 +170,7 @@ async def setchannel(ctx, channel: str):
 
 
 @tasks.loop(seconds = 10)
-async def idle_channel():
+async def idle_channel(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     if voice.is_connected():
         member_count = len(voice.members)
