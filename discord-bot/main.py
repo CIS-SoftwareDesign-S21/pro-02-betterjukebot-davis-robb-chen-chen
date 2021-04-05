@@ -189,6 +189,7 @@ async def setchannel(ctx, channel: str):
         await voice.pause
         await voice.disconnect
         await existing_channel.connect
+        await voice.resume
         await ctx.send(f'switching playing channel to "{channel}"')
     elif existing_channel is not None and not voice.is_playing():
         channel_default = channel
