@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 import asyncio
 import youtube_dl
-import musixmatch
+# import musixmatch
 from secrets import DISCORD_TOKEN
 
 # Creating the Bot
