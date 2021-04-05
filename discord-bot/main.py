@@ -127,7 +127,7 @@ async def join(ctx, channel: str):
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
     await voiceChannel.connect()
 
-    if bot.voice_clients.is_voice_connected():
+    if voiceChannel.is_connected():
         await ctx.send("Joined voice channel")
     else:
         await ctx.send("Cannot join voice channel")
@@ -136,7 +136,7 @@ async def join(ctx, channel: str):
 @bot.command()
 async def create(ctx, channel: str):
 
-    await discord.create_channel(bot.get_server, channel, type=discord.ChannelType.voice)
+    await ctx.create_channel(bot.get_server, channel, type=discord.ChannelType.voice)
     await ctx.send("Channel created")
 
 
