@@ -125,13 +125,7 @@ async def resume(ctx):
 @bot.command()
 async def join(ctx, channel: str):
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
-    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     await voiceChannel.connect()
-
-    if voice.is_connected():
-        await ctx.send("Joined voice channel")
-    else:
-        await ctx.send("Cannot join voice channel")
 
 
 @bot.command()
@@ -146,7 +140,7 @@ async def create(ctx, channel: str):
 async def remove(ctx, channel: str):
     guild = ctx.message.guild
 
-    await guild.remove_channel(channel)
+    await guild.remove_voice_channel(channel)
     await ctx.send("Channel removed")
 
 # Running the bot
