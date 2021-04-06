@@ -262,5 +262,6 @@ async def lobsters(ctx):
     await ctx.send(file=discord.File('lobsters.gif'))
 
 
+
 # Running the bot
 bot.run(DISCORD_TOKEN)
