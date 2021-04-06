@@ -13,6 +13,8 @@ global channel_default
 channel_default = "general"
 global created_channels
 created_channels = []
+global idle_timer
+idle_timer = 300  # seconds (default 5 minutes)
 
 
 @bot.event
@@ -21,11 +23,11 @@ async def on_ready():
     print("Bot ID: {}".format(bot.user.id))
 
 
-@bot.event
-async def on_voice_state_update(member, before, after):
-    if after.voice.channel is not None:
-        if after.voice.channel.name == "general":
-            print("The event is working")
+# @bot.event
+# async def on_voice_state_update(member, before, after):
+#    if after.voice.channel is not None:
+#        if after.voice.channel.name == "general":
+#            print("The event is working")
 
 
 @bot.command()
@@ -114,18 +116,19 @@ async def play(ctx, url: str):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
-    # checks for idle channel
-    # while voice.is_playing():
-    #     await asyncio.sleep(1)
-    # else:
-    #     await asyncio.sleep(15)
-    #     while voice.is_playing():
-    #         break
-    #     else:
-    #         await voice.disconnect()
-    #         for created in created_channels:
-    #             if voiceChannel == created:
-    #                 await voiceChannel.delete()
+    # idle check
+    global idle_timer
+    while voice.is_playing() and len(voiceChannel.members) is not 1: # checks if bot is playing music/if bot alone in voice
+        await asyncio.sleep(1)
+    else:
+        await asyncio.sleep(idle_timer)
+        while voice.is_playing() and len(voiceChannel.members) is not 1:
+            break
+        else:
+            await voice.disconnect()
+            for created in created_channels:
+                if voiceChannel == created:
+                    await voiceChannel.delete()
 
 
 @bot.command()
@@ -202,9 +205,21 @@ async def remove(ctx, channel: str):
     channel_members = bot.get_channel(channel.id).members
 
     if channel is not None and not channel_members:
-        await channel.delete()
-        print(channel_members)
-        print(channel)
+        await ctx.send(f'Are you sure you want to delete channel "{channel}"? (y or n)')
+
+        # below are requirements for user input, if not y or n will not accept the input
+        def check(msg):
+            return msg.author == ctx.author and msg.channel == ctx.channel and msg.content.lower() in ["y", "n"]
+
+        msg = await bot.wait_for("message", check=check)  # waits for user input y or n
+        if msg.content.lower() == "y":
+            await channel.delete()
+            await setchannel(ctx, "general")
+            print(channel_members)
+            print(channel)
+        else:
+            await ctx.send("Cancelling...")
+            print("Remove cancelled.")
     else:
         await ctx.send(f'Channel "{channel}" does not exist or has member(s) inside')
         print(channel_members)
@@ -227,6 +242,13 @@ async def setchannel(ctx, channel: str):
         await guild.create_voice_channel(channel)
         await ctx.send("Channel created and set to default playing channel")
         await joinchannel(ctx, channel)
+
+
+@bot.command()
+async def setidle(ctx, seconds: int):
+    global idle_timer
+    idle_timer = seconds
+    await ctx.send(f'The idle time was set to {seconds} seconds')
 
 
 # Running the bot
