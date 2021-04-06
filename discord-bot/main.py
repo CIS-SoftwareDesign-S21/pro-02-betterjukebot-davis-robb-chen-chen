@@ -205,7 +205,7 @@ async def remove(ctx, channel: str):
     channel_members = bot.get_channel(channel.id).members
 
     if channel is not None and not channel_members:
-        await ctx.send(f"Are you sure you want to delete channel "{channel}"? (y or n)")
+        await ctx.send(f'Are you sure you want to delete channel "{channel}"? (y or n)')
         # below are requirements for user input, if not y or n will not accept the input
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel and msg.content.lower() in ["y", "n"]
