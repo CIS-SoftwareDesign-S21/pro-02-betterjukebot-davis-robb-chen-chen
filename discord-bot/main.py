@@ -118,13 +118,11 @@ async def play(ctx, url: str):
 
     # idle check
     global idle_timer
-    channel_members = bot.get_channel(voiceChannel.id).members
-    while voice.is_playing() and channel_members[1] is not None: # checks if bot is playing music/if bot alone in voice
-        channel_members = bot.get_channel(voiceChannel.id).members # updates/refreshes the list, unsure if needed
+    while voice.is_playing() and len(voiceChannel.members) is not 1: # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
         await asyncio.sleep(idle_timer)
-        while voice.is_playing() and channel_members[1] is not None:
+        while voice.is_playing() and len(voiceChannel.members) is not 1:
             break
         else:
             await voice.disconnect()
@@ -207,9 +205,19 @@ async def remove(ctx, channel: str):
     channel_members = bot.get_channel(channel.id).members
 
     if channel is not None and not channel_members:
-        await channel.delete()
-        print(channel_members)
-        print(channel)
+        await ctx.send(f"Are you sure you want to delete channel "{channel}"? (y or n)")
+        # below are requirements for user input, if not y or n will not accept the input
+        def check(msg):
+            return msg.author == ctx.author and msg.channel == ctx.channel and msg.content.lower() in ["y", "n"]
+
+        msg = await bot.wait_for("message", check=check) # waits for user input y or n
+        if msg.content.lower() == "y":
+            await channel.delete()
+            print(channel_members)
+            print(channel)
+        else:
+            await ctx.send("Cancelling...")
+            print("Remove cancelled.")
     else:
         await ctx.send(f'Channel "{channel}" does not exist or has member(s) inside')
         print(channel_members)
