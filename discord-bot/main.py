@@ -172,10 +172,10 @@ async def joinchannel(ctx, channel: str):
         await ctx.send(f'Created channel "{channel}"')
 
     if voice.is_playing():
-        await voice.pause
-        await voice.disconnect
+        voice.pause()
+        await voice.disconnect()
         await voiceChannel.connect()
-        await voice.resume
+        voice.resume()
         await ctx.send(f'switching playing channel to "{channel}"')
     else:
         await voiceChannel.connect()
@@ -221,10 +221,13 @@ async def setchannel(ctx, channel: str):
         channel_default = channel
         await ctx.send(f'set default playing channel to "{channel}"')
         print(channel_default)
+        await joinchannel(ctx, channel)
     else:
         channel_default = channel
         await guild.create_voice_channel(channel)
         await ctx.send("Channel created and set to default playing channel")
+        await joinchannel(ctx, channel)
+
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
