@@ -14,6 +14,7 @@ channel_default = "General"
 global created_channels
 created_channels = []
 
+
 @bot.event
 async def on_ready():
     print("Connected to bot: {}".format(bot.user.name))
@@ -154,7 +155,22 @@ async def resume(ctx):
 @bot.command()
 async def joinchannel(ctx, channel: str):
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
-    await voiceChannel.connect()
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    guild = ctx.message.guild
+
+    if voiceChannel is None:
+        await guild.create_voice_channel(channel)
+        await ctx.send(f'Created channel "{channel}"')
+
+    if voice.is_playing():
+        await voice.pause
+        await voice.disconnect
+        await voiceChannel.connect()
+        await voice.resume
+        await ctx.send(f'switching playing channel to "{channel}"')
+    else:
+        await voiceChannel.connect()
+        await ctx.send(f'Joined channel "{channel}"')
 
 
 @bot.command()
@@ -171,9 +187,12 @@ async def create(ctx, channel: str):
 @bot.command()
 async def remove(ctx, channel: str):
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
+    voice_channel = discord.utils.get(ctx.message.server.channels, name=channel, type=discord.ChannelType.voice)
 
-    if existing_channel is not None:
+    if existing_channel is not None and voice_channel is None:
         await existing_channel.delete()
+    elif existing_channel is not None and voice_channel is not None:
+        await ctx.send(f'Channel "{channel}" has member(s) inside')
     else:
         await ctx.send(f'No channel named "{channel}" was found')
 
@@ -181,23 +200,15 @@ async def remove(ctx, channel: str):
 @bot.command()
 async def setchannel(ctx, channel: str):
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
-    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    guild = ctx.message.guild
     global channel_default
 
-    if existing_channel is not None and voice.is_playing():
+    if existing_channel is not None:
         channel_default = channel
-        await voice.pause
-        await voice.disconnect
-        await existing_channel.connect
-        await voice.resume
-        await ctx.send(f'switching playing channel to "{channel}"')
-    elif existing_channel is not None and not voice.is_playing():
-        channel_default = channel
+        if existing_channel is None:
+            await guild.create_voice_channel(channel)
+            await ctx.send("Channel created")
         await ctx.send(f'set default playing channel to "{channel}"')
-    else:
-        await ctx.send(f'No channel named "{channel}" was found')
-        await ctx.send("Please create the channel first")
-
     print(channel_default)
 
 
