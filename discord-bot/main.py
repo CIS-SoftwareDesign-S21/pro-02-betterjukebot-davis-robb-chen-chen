@@ -184,8 +184,9 @@ async def joinchannel(ctx, channel: str):
 
 @bot.command()
 async def create(ctx, channel: str):
-
+    existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
     guild = ctx.message.guild
+
 
     await guild.create_voice_channel(channel)
     await ctx.send("Channel created")
@@ -217,12 +218,12 @@ async def setchannel(ctx, channel: str):
 
     if existing_channel is not None:
         channel_default = channel
-        if existing_channel is None:
-            await guild.create_voice_channel(channel)
-            await ctx.send("Channel created")
         await ctx.send(f'set default playing channel to "{channel}"')
-    print(channel_default)
-
+        print(channel_default)
+    else:
+        channel_default = channel
+        await guild.create_voice_channel(channel)
+        await ctx.send("Channel created and set to default playing channel")
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
