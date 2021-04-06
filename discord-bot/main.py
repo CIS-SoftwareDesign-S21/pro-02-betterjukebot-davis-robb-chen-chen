@@ -184,15 +184,16 @@ async def joinchannel(ctx, channel: str):
 
 @bot.command()
 async def create(ctx, channel: str):
-    existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
     guild = ctx.message.guild
+    existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
 
-
-    await guild.create_voice_channel(channel)
-    await ctx.send("Channel created")
-
-    global created_channels
-    created_channels.append(discord.utils.get(ctx.guild.channels, name=channel))
+    if existing_channel is None:
+        await guild.create_voice_channel(channel)
+        await ctx.send("Channel created")
+        global created_channels
+        created_channels.append(discord.utils.get(ctx.guild.channels, name=channel))
+    else:
+        await ctx.send(f'Channel "{channel}" already exists')
 
 
 @bot.command()
