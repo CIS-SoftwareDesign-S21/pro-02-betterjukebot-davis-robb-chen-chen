@@ -6,6 +6,7 @@ import youtube_dl
 
 # import musixmatch
 from secrets import DISCORD_TOKEN
+from pyrandmeme import *
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -249,6 +250,16 @@ async def setidle(ctx, seconds: int):
     global idle_timer
     idle_timer = seconds
     await ctx.send(f'The idle time was set to {seconds} seconds')
+
+
+@bot.command()
+async def meme(ctx):
+    await ctx.send(embed=await pyrandmeme())
+
+
+@bot.command()
+async def lobsters(ctx):
+    await ctx.send(file=discord.File('lobsters.gif'))
 
 
 # Running the bot
