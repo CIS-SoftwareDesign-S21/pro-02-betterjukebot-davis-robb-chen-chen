@@ -116,13 +116,15 @@ async def play(ctx, url: str):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
-    # checks for idle channel
+    # idle check
     global idle_timer
-    while voice.is_playing():
+    channel_members = bot.get_channel(voiceChannel.id).members
+    while voice.is_playing() and channel_members[1] is not None: # checks if bot is playing music/if bot alone in voice
+        channel_members = bot.get_channel(voiceChannel.id).members # updates/refreshes the list, unsure if needed
         await asyncio.sleep(1)
     else:
         await asyncio.sleep(idle_timer)
-        while voice.is_playing():
+        while voice.is_playing() and channel_members[1] is not None:
             break
         else:
             await voice.disconnect()
