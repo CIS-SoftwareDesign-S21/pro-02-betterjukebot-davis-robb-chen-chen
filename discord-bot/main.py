@@ -118,6 +118,7 @@ async def play(ctx, url: str):
 
     # idle check
     global idle_timer
+    print(len(voiceChannel.members))
     while voice.is_playing() and len(voiceChannel.members) is not 1: # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
