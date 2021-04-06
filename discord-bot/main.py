@@ -213,6 +213,7 @@ async def remove(ctx, channel: str):
         msg = await bot.wait_for("message", check=check) # waits for user input y or n
         if msg.content.lower() == "y":
             await channel.delete()
+            await setchannel("general")
             print(channel_members)
             print(channel)
         else:
@@ -246,6 +247,7 @@ async def setchannel(ctx, channel: str):
 async def setidle(ctx, seconds: int):
     global idle_timer
     idle_timer = seconds
+    await ctx.send(f'The idle time was set to "{seconds}"')
 
 
 # Running the bot
