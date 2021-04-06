@@ -14,7 +14,7 @@ channel_default = "general"
 global created_channels
 created_channels = []
 global idle_timer
-idle_timer = 15
+idle_timer = 300 # seconds (default 5 minutes)
 
 
 @bot.event
