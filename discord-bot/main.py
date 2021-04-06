@@ -23,11 +23,11 @@ async def on_ready():
     print("Bot ID: {}".format(bot.user.id))
 
 
-@bot.event
-async def on_voice_state_update(member, before, after):
-    if after.voice.channel is not None:
-        if after.voice.channel.name == "general":
-            print("The event is working")
+# @bot.event
+# async def on_voice_state_update(member, before, after):
+#    if after.voice.channel is not None:
+#        if after.voice.channel.name == "general":
+#            print("The event is working")
 
 
 @bot.command()
