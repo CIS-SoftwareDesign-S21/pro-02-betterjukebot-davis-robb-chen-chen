@@ -13,6 +13,8 @@ global channel_default
 channel_default = "general"
 global created_channels
 created_channels = []
+global idle_timer
+idle_timer = 15
 
 
 @bot.event
@@ -115,17 +117,18 @@ async def play(ctx, url: str):
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
     # checks for idle channel
-    # while voice.is_playing():
-    #     await asyncio.sleep(1)
-    # else:
-    #     await asyncio.sleep(15)
-    #     while voice.is_playing():
-    #         break
-    #     else:
-    #         await voice.disconnect()
-    #         for created in created_channels:
-    #             if voiceChannel == created:
-    #                 await voiceChannel.delete()
+    global idle_timer
+    while voice.is_playing():
+        await asyncio.sleep(1)
+    else:
+        await asyncio.sleep(idle_timer)
+        while voice.is_playing():
+            break
+        else:
+            await voice.disconnect()
+            for created in created_channels:
+                if voiceChannel == created:
+                    await voiceChannel.delete()
 
 
 @bot.command()
@@ -227,6 +230,12 @@ async def setchannel(ctx, channel: str):
         await guild.create_voice_channel(channel)
         await ctx.send("Channel created and set to default playing channel")
         await joinchannel(ctx, channel)
+
+
+@bot.command()
+async def setidle(ctx, seconds: int):
+    global idle_timer
+    idle_timer = seconds
 
 
 # Running the bot
