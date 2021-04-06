@@ -32,3 +32,5 @@ pip~=21.0.1
 setuptools~=54.2.0
 future~=0.18.2
 pefile~=2019.4.18
+musixmatch~=0.9
+spotipy

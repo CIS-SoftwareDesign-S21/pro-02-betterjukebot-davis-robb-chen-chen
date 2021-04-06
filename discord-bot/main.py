@@ -3,9 +3,16 @@ from discord.ext.commands import Bot
 import os
 import asyncio
 import youtube_dl
+import musixmatch
+import spotipy
+from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN, SPOTIPY_TOKEN_CLIENT, SPOTIPY_TOKEN_SECRET
 
-# import musixmatch
-from secrets import DISCORD_TOKEN
+musixmatch.apikey = MUSIXMATCH_TOKEN
+
+from spotipy.oauth2 import SpotifyClientCredentials
+
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_TOKEN_CLIENT,
+                                                           client_secret=SPOTIPY_TOKEN_SECRET))
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -15,6 +22,8 @@ global created_channels
 created_channels = []
 global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
+global display_lyrics
+display_lyrics = True
 
 
 @bot.event
@@ -118,7 +127,8 @@ async def play(ctx, url: str):
 
     # idle check
     global idle_timer
-    while voice.is_playing() and len(voiceChannel.members) is not 1: # checks if bot is playing music/if bot alone in voice
+    while voice.is_playing() and len(
+            voiceChannel.members) is not 1:  # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
         await asyncio.sleep(idle_timer)
@@ -249,6 +259,13 @@ async def setidle(ctx, seconds: int):
     global idle_timer
     idle_timer = seconds
     await ctx.send(f'The idle time was set to {seconds} seconds')
+
+
+@bot.command()
+async def lyrics(ctx):
+    lyrics = musixmatch.matcher_lyrics_get('ライフライン', 'YUC\'e')
+
+    await ctx.send(f'{lyrics}')
 
 
 # Running the bot
