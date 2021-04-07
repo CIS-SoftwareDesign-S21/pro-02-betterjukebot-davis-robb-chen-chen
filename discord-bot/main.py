@@ -6,6 +6,7 @@ import youtube_dl
 import random
 import giphy_client
 from giphy_client.rest import ApiException
+from pprint import pprint
 
 # import musixmatch
 from secrets import DISCORD_TOKEN, GIPHY_TOKEN
@@ -21,10 +22,28 @@ global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
 
 
-class DiscordClient(discord.Client):
-    async def on_ready(self):
-        print("Connected to bot: {}".format(self.user.name))
-        print("Bot ID: {}".format(bot.user.id))
+@bot.event
+async def on_ready():
+    print("Connected to bot: {}".format(bot.user.name))
+    print("Bot ID: {}".format(bot.user.id))
+
+
+#########################################################
+# Create an instance of the API class
+api_instance = giphy_client.DefaultApi()
+config = {
+    "api_key": GIPHY_TOKEN,
+    "limit": 1,
+    "rating": "g",
+}  # Giphy API Key,
+try:
+    api_response = api_instance.gifs_trending_get(
+        config["api_key"], limit=config["limit"], rating=config["rating"]
+    )
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->gifs_trending_get: %s\n" % e)
+#########################################################
 
 
 # @bot.event
@@ -122,7 +141,9 @@ async def play(ctx, url: str):
 
     # idle check
     global idle_timer
-    while voice.is_playing() and len(voiceChannel.members) is not 1: # checks if bot is playing music/if bot alone in voice
+    while (
+        voice.is_playing() and len(voiceChannel.members) is not 1
+    ):  # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
         await asyncio.sleep(idle_timer)
@@ -213,7 +234,11 @@ async def remove(ctx, channel: str):
 
         # below are requirements for user input, if not y or n will not accept the input
         def check(msg):
-            return msg.author == ctx.author and msg.channel == ctx.channel and msg.content.lower() in ["y", "n"]
+            return (
+                msg.author == ctx.author
+                and msg.channel == ctx.channel
+                and msg.content.lower() in ["y", "n"]
+            )
 
         msg = await bot.wait_for("message", check=check)  # waits for user input y or n
         if msg.content.lower() == "y":
@@ -252,7 +277,7 @@ async def setchannel(ctx, channel: str):
 async def setidle(ctx, seconds: int):
     global idle_timer
     idle_timer = seconds
-    await ctx.send(f'The idle time was set to {seconds} seconds')
+    await ctx.send(f"The idle time was set to {seconds} seconds")
 
 
 @bot.command()
@@ -262,60 +287,42 @@ async def meme(ctx):
 
 @bot.command()
 async def lobsters(ctx):
-    await ctx.send(file=discord.File('lobsters.gif'))
+    await ctx.send(file=discord.File("lobsters.gif"))
 
 
-@bot.command(name='8ball')
+@bot.command(name="8ball")
 async def magic_eight_ball(ctx):
     response = [
-        'It is certain.',
-        'It is decidedly so.',
-        'Without a doubt.',
-        'Yes – definitely.',
-        'You may rely on it.',
-        'As I see it, yes.',
-        'Most likely.',
-        'Outlook good.',
-        'Yes.',
-        'Signs point to yes.',
-        'Reply hazy, try again.',
-        'Ask again later.',
-        'Better not tell you now.',
-        'Cannot predict now.',
-        'Concentrate and ask again.',
+        "It is certain.",
+        "It is decidedly so.",
+        "Without a doubt.",
+        "Yes – definitely.",
+        "You may rely on it.",
+        "As I see it, yes.",
+        "Most likely.",
+        "Outlook good.",
+        "Yes.",
+        "Signs point to yes.",
+        "Reply hazy, try again.",
+        "Ask again later.",
+        "Better not tell you now.",
+        "Cannot predict now.",
+        "Concentrate and ask again.",
         "Don't count on it.",
-        'My reply is no.',
-        'My sources say no.',
-        'Outlook not so good.',
-        'Very doubtful.',
+        "My reply is no.",
+        "My sources say no.",
+        "Outlook not so good.",
+        "Very doubtful.",
     ]
     answer = random.choice(response)
     await ctx.send(answer)
     gif = await search_gifs(answer)
-    await ctx.send('Gif URL : ' + gif)
-
-
-
-#########################################################
-# Create an instance of the API class
-api_instance = giphy_client.DefaultApi()
-config = {
-    'api_key': GIPHY_TOKEN,  # Giphy API Key,
-    'limit': 1,
-    'rating': 'g'
-}
-try:
-   api_response = api_instance.gifs_trending_get(
-        token, limit=config['limit'], rating=config['rating'])
-       print(api_response)
-except ApiException as e:
-   print("Exception when calling DefaultApi->gifs_trending_get: %s\n" % e)
-#########################################################
+    await ctx.send("Gif URL : " + gif)
 
 
 async def search_gifs(query):
     try:
-        response = api_instance.gifs_search_get(token, query, limit=5, rating='g')
+        response = api_instance.gifs_search_get(GIPHY_TOKEN, query, limit=5, rating="g")
         lst = list(response.data)
         gif = random.choices(lst)
 
@@ -325,24 +332,16 @@ async def search_gifs(query):
         return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
 
 
-async def gif_response(emotion):
-    gifs = search_gifs(emotion)
-    lst = list(gifs.data)
-    gif = random.choices(lst)
-
-    return gif[0].url
-
-
-async def on_message(self, message):
+@bot.event
+async def on_message(message):
     # Whenever a user other than bot says "hi"
-    if message.author != self.user:
-        if message.content == 'hi':
-            await message.channel.send('Hi there!!! ' + message.author.mention)
-            await message.channel.send(gif_response('hi'))
+    if message.content == "hi":
+        await message.channel.send("Hi there!!! " + message.author.mention)
+        await message.channel.send(await search_gifs("hi"))
 
-        elif message.content == 'hello':
-            await message.channel.send('Hello :) ' + message.author.mention)
-            await message.channel.send(gif_response('hello'))
+    elif message.content == "hello":
+        await message.channel.send("Hello :) " + message.author.mention)
+        await message.channel.send(await search_gifs("hello"))
 
 
 # Running the bot
