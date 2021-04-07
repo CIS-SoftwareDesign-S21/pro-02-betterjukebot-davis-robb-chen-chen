@@ -52,17 +52,17 @@ async def trigger_words(message):
         )
         await message.channel.send(await search_gifs("star wars bye"))
 
-    elif message.content == "good bye":
-        await message.channel.send(message.author.mention + " Live long and prosper")
-        await message.channel.send(await search_gifs("salute"))
-
-    elif message.content == "goodbye":
+    elif message.content == "good bye" or "goodbye":
         await message.channel.send(message.author.mention + " Live long and prosper")
         await message.channel.send(await search_gifs("salute"))
 
     elif message.content == "goober":
         await message.channel.send(message.author.mention + " You're a goober! www")
         await message.channel.send(await search_gifs("goober"))
+
+    elif message.content == "lol":
+        await message.channel.send(message.author.mention + "www")
+        await message.channel.send(await search_gifs("www"))
 
 
 #########################################################
