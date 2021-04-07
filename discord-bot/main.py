@@ -50,7 +50,7 @@ async def trigger_words(message):
             message.author.mention + " May the force be with you")
         await message.channel.send(await search_gifs("star wars bye"))
 
-    elif message.content == "good bye" or "goodbye":
+    elif message.content == "good bye":
         await message.channel.send(message.author.mention + " Live long and prosper")
         await message.channel.send(await search_gifs("salute"))
 
