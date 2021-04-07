@@ -3,9 +3,12 @@ from discord.ext.commands import Bot
 import os
 import asyncio
 import youtube_dl
+import random
+import giphy_client
+from giphy_client.rest import ApiException
 
 # import musixmatch
-from secrets import DISCORD_TOKEN
+from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
 
 # Creating the Bot
@@ -18,10 +21,10 @@ global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
 
 
-@bot.event
-async def on_ready():
-    print("Connected to bot: {}".format(bot.user.name))
-    print("Bot ID: {}".format(bot.user.id))
+class DiscordClient(discord.Client):
+    async def on_ready(self):
+        print("Connected to bot: {}".format(self.user.name))
+        print("Bot ID: {}".format(bot.user.id))
 
 
 # @bot.event
@@ -261,6 +264,85 @@ async def meme(ctx):
 async def lobsters(ctx):
     await ctx.send(file=discord.File('lobsters.gif'))
 
+
+@bot.command(name='8ball')
+async def magic_eight_ball(ctx):
+    response = [
+        'It is certain.',
+        'It is decidedly so.',
+        'Without a doubt.',
+        'Yes – definitely.',
+        'You may rely on it.',
+        'As I see it, yes.',
+        'Most likely.',
+        'Outlook good.',
+        'Yes.',
+        'Signs point to yes.',
+        'Reply hazy, try again.',
+        'Ask again later.',
+        'Better not tell you now.',
+        'Cannot predict now.',
+        'Concentrate and ask again.',
+        "Don't count on it.",
+        'My reply is no.',
+        'My sources say no.',
+        'Outlook not so good.',
+        'Very doubtful.',
+    ]
+    answer = random.choice(response)
+    await ctx.send(answer)
+    gif = await search_gifs(answer)
+    await ctx.send('Gif URL : ' + gif)
+
+
+
+#########################################################
+# Create an instance of the API class
+api_instance = giphy_client.DefaultApi()
+config = {
+    'api_key': GIPHY_TOKEN,  # Giphy API Key,
+    'limit': 1,
+    'rating': 'g'
+}
+try:
+   api_response = api_instance.gifs_trending_get(
+        token, limit=config['limit'], rating=config['rating'])
+       print(api_response)
+except ApiException as e:
+   print("Exception when calling DefaultApi->gifs_trending_get: %s\n" % e)
+#########################################################
+
+
+async def search_gifs(query):
+    try:
+        response = api_instance.gifs_search_get(token, query, limit=5, rating='g')
+        lst = list(response.data)
+        gif = random.choices(lst)
+
+        return gif[0].url
+
+    except ApiException as e:
+        return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
+
+
+async def gif_response(emotion):
+    gifs = search_gifs(emotion)
+    lst = list(gifs.data)
+    gif = random.choices(lst)
+
+    return gif[0].url
+
+
+async def on_message(self, message):
+    # Whenever a user other than bot says "hi"
+    if message.author != self.user:
+        if message.content == 'hi':
+            await message.channel.send('Hi there!!! ' + message.author.mention)
+            await message.channel.send(gif_response('hi'))
+
+        elif message.content == 'hello':
+            await message.channel.send('Hello :) ' + message.author.mention)
+            await message.channel.send(gif_response('hello'))
 
 
 # Running the bot
