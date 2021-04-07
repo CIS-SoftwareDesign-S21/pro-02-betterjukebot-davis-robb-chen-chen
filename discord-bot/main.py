@@ -42,14 +42,12 @@ async def trigger_words(message):
 
     elif message.content == "welcome":
         await message.channel.send(
-            message.author.mention + " Welcome to the discord channel :)"
-        )
+            message.author.mention + " Welcome to the discord channel :)")
         await message.channel.send(await search_gifs("welcome"))
 
     elif message.content == "bye":
         await message.channel.send(
-            message.author.mention + " May the force be with you"
-        )
+            message.author.mention + " May the force be with you")
         await message.channel.send(await search_gifs("star wars bye"))
 
     elif message.content == "good bye" or "goodbye":
