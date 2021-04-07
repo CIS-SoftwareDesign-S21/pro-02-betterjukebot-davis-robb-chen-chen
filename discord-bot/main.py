@@ -5,12 +5,13 @@ import asyncio
 import youtube_dl
 import random
 import giphy_client
-from giphy_client.rest import ApiException
-from pprint import pprint
 
 # import musixmatch
+from giphy_client.rest import ApiException
+from pprint import pprint
 from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
+
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -280,6 +281,7 @@ async def setidle(ctx, seconds: int):
     await ctx.send(f"The idle time was set to {seconds} seconds")
 
 
+# was working, then stopped. May need a new library or implement manual solution
 @bot.command()
 async def meme(ctx):
     await ctx.send(embed=await pyrandmeme())
