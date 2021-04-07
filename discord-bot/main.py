@@ -59,11 +59,11 @@ async def trigger_words(message):
         await message.channel.send(await search_gifs("goober"))
 
     elif message.content == "lol":
-        await message.channel.send(message.author.mention + "www")
+        await message.channel.send(message.author.mention + " www")
         await message.channel.send(await search_gifs("www"))
 
     elif message.content == "www":
-        await message.channel.send(message.author.mention + "www")
+        await message.channel.send(message.author.mention + " www")
         await message.channel.send(await search_gifs("laughing"))
 
 
