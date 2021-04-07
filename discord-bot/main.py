@@ -29,6 +29,42 @@ async def on_ready():
     print("Bot ID: {}".format(bot.user.id))
 
 
+@bot.listen("on_message")
+async def trigger_words(message):
+    # Whenever a user other than bot says "hi"
+    if message.content == "hi":
+        await message.channel.send("Hi there!!! " + message.author.mention)
+        await message.channel.send(await search_gifs("hi"))
+
+    elif message.content == "hello":
+        await message.channel.send("Hello :) " + message.author.mention)
+        await message.channel.send(await search_gifs("hello"))
+
+    elif message.content == "welcome":
+        await message.channel.send(
+            message.author.mention + " Welcome to the discord channel :)"
+        )
+        await message.channel.send(await search_gifs("welcome"))
+
+    elif message.content == "bye":
+        await message.channel.send(
+            message.author.mention + " May the force be with you"
+        )
+        await message.channel.send(await search_gifs("star wars bye"))
+
+    elif message.content == "good bye":
+        await message.channel.send(message.author.mention + " Live long and prosper")
+        await message.channel.send(await search_gifs("salute"))
+
+    elif message.content == "goodbye":
+        await message.channel.send(message.author.mention + " Live long and prosper")
+        await message.channel.send(await search_gifs("salute"))
+
+    elif message.content == "goober":
+        await message.channel.send(message.author.mention + " You're a goober! www")
+        await message.channel.send(await search_gifs("goober"))
+
+
 #########################################################
 # Create an instance of the API class
 api_instance = giphy_client.DefaultApi()
@@ -332,38 +368,6 @@ async def search_gifs(query):
 
     except ApiException as e:
         return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
-
-
-@bot.event
-async def on_message(message):
-    # Whenever a user other than bot says "hi"
-    if message.content == "hi":
-        await message.channel.send("Hi there!!! " + message.author.mention)
-        await message.channel.send(await search_gifs("hi"))
-
-    elif message.content == "hello":
-        await message.channel.send("Hello :) " + message.author.mention)
-        await message.channel.send(await search_gifs("hello"))
-
-    elif message.content == 'welcome':
-        await message.channel.send(message.author.mention + ' Welcome to the discord channel :)')
-        await message.channel.send(await search_gifs('welcome'))
-
-    elif message.content == 'bye':
-        await message.channel.send(message.author.mention + ' May the force be with you')
-        await message.channel.send(await search_gifs('star wars bye'))
-
-    elif message.content == "good bye":
-        await message.channel.send(message.author.mention + ' Live long and prosper')
-        await message.channel.send(await search_gifs('salute'))
-
-    elif message.content == "goodbye":
-        await message.channel.send(message.author.mention + ' Live long and prosper')
-        await message.channel.send(await search_gifs('salute'))
-
-    elif message.content == "goober":
-        await message.channel.send(message.author.mention + " You're a goober! www")
-        await message.channel.send(await search_gifs('goober'))
 
 
 # Running the bot
