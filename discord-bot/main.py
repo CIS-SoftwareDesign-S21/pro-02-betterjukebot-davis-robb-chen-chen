@@ -345,6 +345,26 @@ async def on_message(message):
         await message.channel.send("Hello :) " + message.author.mention)
         await message.channel.send(await search_gifs("hello"))
 
+    elif message.content == 'welcome':
+        await message.channel.send(message.author.mention + ' Welcome to the discord channel :)')
+        await message.channel.send(await search_gifs('welcome'))
+
+    elif message.content == 'bye':
+        await message.channel.send(message.author.mention + ' May the force be with you')
+        await message.channel.send(await search_gifs('star wars bye'))
+
+    elif message.content == "good bye":
+        await message.channel.send(message.author.mention + ' Live long and prosper')
+        await message.channel.send(await search_gifs('salute'))
+
+    elif message.content == "goodbye":
+        await message.channel.send(message.author.mention + ' Live long and prosper')
+        await message.channel.send(await search_gifs('salute'))
+
+    elif message.content == "goober":
+        await message.channel.send(message.author.mention + " You're a goober! www")
+        await message.channel.send(await search_gifs('goober'))
+
 
 # Running the bot
 bot.run(DISCORD_TOKEN)
