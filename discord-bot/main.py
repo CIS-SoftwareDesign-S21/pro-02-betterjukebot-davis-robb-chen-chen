@@ -11,6 +11,7 @@ from giphy_client.rest import ApiException
 from pprint import pprint
 from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
+from queue import Queue
 
 
 # Creating the Bot
@@ -22,7 +23,7 @@ created_channels = []
 global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
 global song_queue
-song_queue = []
+song_queue = Queue(maxsize=0)
 
 
 @bot.event
@@ -148,11 +149,10 @@ async def play(ctx, url: str):
     try:
         if song:
             os.remove("song.mp3")
-    except PermissionError:
-        await ctx.send(
-            "Cannot play another song until song currently playing is complete"
-        )
-        return
+    except PermissionError: # if song is currently being played, add to queue
+        await ctx.send("Song added to queue.")
+        global song_queue
+        song_queue.put(url)
 
     # defining voice channel and joining if not already connected
     print(channel_default)
@@ -164,29 +164,29 @@ async def play(ctx, url: str):
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
     # while loop that stays here until currently playing is done (queue)
-    # while (
-    #         voice.is_playing() and len(voiceChannel.members) is not 1
-    # ):
-    #     await asyncio.sleep(1)
+    while (
+            voice.is_playing()
+    ):
+        await asyncio.sleep(1)
+    else:
+        # YouTube api stuff
+        ydl_opts = {
+            "format": "bestaudio/best",
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }
+            ],
+        }
 
-    # YouTube api stuff
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "192",
-            }
-        ],
-    }
-
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
-    for file in os.listdir("./"):
-        if file.endswith(".mp3"):
-            os.rename(file, "song.mp3")
-    voice.play(discord.FFmpegPCMAudio("song.mp3"))
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+        for file in os.listdir("./"):
+            if file.endswith(".mp3"):
+                os.rename(file, "song.mp3")
+        voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
     # idle check
     global idle_timer
