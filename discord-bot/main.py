@@ -159,44 +159,45 @@ async def play(ctx, url: str):
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     print(voiceChannel)
-    if voice == None:
+    if voice is None:
         await voiceChannel.connect()
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
-    # while loop that stays here until currently playing is done (queue)
-    while (
-            voice.is_playing()
-    ):
-        await asyncio.sleep(1)
-    else:
-        # YouTube api stuff
-        ydl_opts = {
-            "format": "bestaudio/best",
-            "postprocessors": [
-                {
-                    "key": "FFmpegExtractAudio",
-                    "preferredcodec": "mp3",
-                    "preferredquality": "192",
-                }
-            ],
-        }
+    # YouTube api stuff
+    ydl_opts = {
+        "format": "bestaudio/best",
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192",
+            }
+        ],
+    }
 
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                os.rename(file, "song.mp3")
-        voice.play(discord.FFmpegPCMAudio("song.mp3"))
+    # check if song exists in queue (which means another song currently playing)
+    if not song_queue.empty():
+        while voice.is_playing():  # checks if bot is playing music
+            await asyncio.sleep(1)
+        else:
+            url = song_queue.get()
 
-    # idle check
+    # downloading song into song.mp3
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            os.rename(file, "song.mp3")
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
+
+    # idle check ***could possible be moved into a @tasks or a listener method***
     global idle_timer
-    while (
-        voice.is_playing() and len(voiceChannel.members) is not 1
-    ):  # checks if bot is playing music/if bot alone in voice
+    while voice.is_playing() and len(voiceChannel.members) != 1:  # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
+
         await asyncio.sleep(idle_timer)
-        while voice.is_playing() and len(voiceChannel.members) is not 1:
+        while voice.is_playing() and len(voiceChannel.members) != 1:
             break
         else:
             await voice.disconnect()
