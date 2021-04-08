@@ -6,8 +6,8 @@ import youtube_dl
 import json
 
 from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
-
 from musixmatch import Musixmatch
+
 musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
 
 # Creating the Bot
@@ -123,8 +123,9 @@ async def play(ctx, url: str):
 
     # idle check
     global idle_timer
-    while voice.is_playing() and len(
-            voiceChannel.members) is not 1:  # checks if bot is playing music/if bot alone in voice
+    while (
+        voice.is_playing() and len(voiceChannel.members) is not 1
+    ):  # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
         await asyncio.sleep(idle_timer)
@@ -215,7 +216,11 @@ async def remove(ctx, channel: str):
 
         # below are requirements for user input, if not y or n will not accept the input
         def check(msg):
-            return msg.author == ctx.author and msg.channel == ctx.channel and msg.content.lower() in ["y", "n"]
+            return (
+                msg.author == ctx.author
+                and msg.channel == ctx.channel
+                and msg.content.lower() in ["y", "n"]
+            )
 
         msg = await bot.wait_for("message", check=check)  # waits for user input y or n
         if msg.content.lower() == "y":
@@ -254,14 +259,14 @@ async def setchannel(ctx, channel: str):
 async def setidle(ctx, seconds: int):
     global idle_timer
     idle_timer = seconds
-    await ctx.send(f'The idle time was set to {seconds} seconds')
+    await ctx.send(f"The idle time was set to {seconds} seconds")
 
 
 @bot.command()
 async def lyrics(ctx):
 
     lyrics_get = musixmatch.track_lyrics_get(15953433)
-    lyrics_send = json.loads(lyrics_get)
+    lyrics_send = json.loads(str(lyrics_get))
 
     if lyrics_send is not None:
         print(lyrics_send)
