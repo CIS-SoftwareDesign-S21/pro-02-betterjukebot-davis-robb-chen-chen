@@ -3,9 +3,11 @@ from discord.ext.commands import Bot
 import os
 import asyncio
 import youtube_dl
-import musixmatch
+
 from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
-musixmatch.apikey = MUSIXMATCH_TOKEN
+
+from musixmatch import Musixmatch
+musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -256,9 +258,10 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx):
-    lyrics = musixmatch.lyrics('ライフライン', 'YUC\'e')
 
-    await ctx.send(f'{lyrics}')
+    lyrics_display = musixmatch.track_lyrics_get('ライフライン', 'YUC\'e')
+
+    await ctx.send(f'{lyrics_display}')
 
 
 # Running the bot
