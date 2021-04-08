@@ -262,7 +262,8 @@ async def lyrics(ctx):
     lyrics_display = musixmatch.track_lyrics_get(15953433)
 
     if lyrics_display is not None:
-        await ctx.send(lyrics_display)
+        print(lyrics_display)
+        await ctx.send(f'{lyrics_display}')
 
 
 # Running the bot
