@@ -228,7 +228,7 @@ async def resume(ctx):
         await ctx.send("Voice is not paused")
 
 
-@bot.command(brief="forces the bot to enter channel", help="forces the bot to enter channel \n if channel name is given but not created it will create the channel, if bot is playing in another channel it will resume in the specified channel\nusage: !joinchannel General")
+@bot.command(brief="forces the bot to enter channel", help="forces the bot to enter channel \n if channel name is given but not created it will create the channel, if bot is playing in another channel it will resume in the specified channel\nUsage: !joinchannel General")
 async def joinchannel(ctx, channel: str):
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
@@ -263,7 +263,7 @@ async def create(ctx, channel: str):
         await ctx.send(f'Channel "{channel}" already exists')
 
 
-@bot.command(brief="removes given voice channel", help="removes give voice channel if it is empty, asks for verification \n usage:!remove general")
+@bot.command(brief="removes given voice channel", help="removes give voice channel if it is empty, asks for verification \nUsage:!remove general")
 async def remove(ctx, channel: str):
     channel = discord.utils.get(ctx.guild.channels, name=channel)
     channel_members = bot.get_channel(channel.id).members
@@ -294,7 +294,7 @@ async def remove(ctx, channel: str):
         print(channel)
 
 
-@bot.command(brief="sets the voice channel bot will be in", help="sets the bot to enter a specific channel \n \nusage: !setchannel room1")
+@bot.command(brief="sets the voice channel bot will be in", help="sets the bot to enter a specific channel \n \nUsage: !setchannel room1")
 async def setchannel(ctx, channel: str):
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
     guild = ctx.message.guild
@@ -320,7 +320,7 @@ async def setidle(ctx, seconds: int):
 
 
 # was working, then stopped. May need a new library or implement manual solution
-@bot.command(brief="sends a random meme", help="sends a random meme \n usage: !meme")
+@bot.command(brief="sends a random meme", help="sends a random meme \nUsage: !meme")
 async def meme(ctx):
     await ctx.send(embed=await pyrandmeme())
 
@@ -330,7 +330,7 @@ async def lobsters(ctx):
     await ctx.send(file=discord.File("lobsters.gif"))
 
 
-@bot.command(name="8ball", brief="ask a question and it will answer", help="\n usage: !8ball")
+@bot.command(name="8ball", brief="ask a question and it will answer", help="\nUsage: !8ball")
 async def magic_eight_ball(ctx):
     response = [
         "It is certain.",
