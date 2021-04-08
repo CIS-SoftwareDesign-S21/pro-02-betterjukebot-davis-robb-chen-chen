@@ -3,6 +3,7 @@ from discord.ext.commands import Bot
 import os
 import asyncio
 import youtube_dl
+import json
 
 from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
 
@@ -259,11 +260,12 @@ async def setidle(ctx, seconds: int):
 @bot.command()
 async def lyrics(ctx):
 
-    lyrics_display = musixmatch.track_lyrics_get(15953433)
+    lyrics_get = musixmatch.track_lyrics_get(15953433)
+    lyrics_send = json.loads(lyrics_get)
 
-    if lyrics_display is not None:
-        print(lyrics_display)
-        await ctx.send(f'{lyrics_display}')
+    if lyrics_send is not None:
+        print(lyrics_send)
+        await ctx.send(f'{lyrics_send}')
 
 
 # Running the bot
