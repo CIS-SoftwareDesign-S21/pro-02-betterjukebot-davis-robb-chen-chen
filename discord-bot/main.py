@@ -259,7 +259,7 @@ async def setidle(ctx, seconds: int):
 @bot.command()
 async def lyrics(ctx):
 
-    lyrics_display = musixmatch.track_lyrics_get('ライフライン', 'YUC\'e')
+    lyrics_display = musixmatch.track_lyrics_get(15953433)
 
     await ctx.send(f'{lyrics_display}')
 
