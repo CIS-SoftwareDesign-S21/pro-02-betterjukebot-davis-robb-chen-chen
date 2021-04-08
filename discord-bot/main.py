@@ -266,6 +266,7 @@ async def setidle(ctx, seconds: int):
 async def lyrics(ctx):
 
     lyrics_get = musixmatch.track_lyrics_get(15953433)
+    lyrics_get = lyrics_get.replace("\'", "\"")
     lyrics_send = json.loads(str(lyrics_get))
 
     if lyrics_send is not None:
