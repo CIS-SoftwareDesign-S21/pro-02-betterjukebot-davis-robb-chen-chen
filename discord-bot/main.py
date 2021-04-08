@@ -4,15 +4,8 @@ import os
 import asyncio
 import youtube_dl
 import musixmatch
-import spotipy
-from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN, SPOTIPY_TOKEN_CLIENT, SPOTIPY_TOKEN_SECRET
-
+from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
 musixmatch.apikey = MUSIXMATCH_TOKEN
-
-from spotipy.oauth2 import SpotifyClientCredentials
-
-sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_TOKEN_CLIENT,
-                                                           client_secret=SPOTIPY_TOKEN_SECRET))
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -263,7 +256,7 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx):
-    lyrics = musixmatch.matcher_lyrics_get('ライフライン', 'YUC\'e')
+    lyrics = musixmatch.lyrics('ライフライン', 'YUC\'e')
 
     await ctx.send(f'{lyrics}')
 
