@@ -21,6 +21,8 @@ global created_channels
 created_channels = []
 global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
+global song_queue
+song_queue = []
 
 
 @bot.event
@@ -152,6 +154,7 @@ async def play(ctx, url: str):
         )
         return
 
+    # defining voice channel and joining if not already connected
     print(channel_default)
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
@@ -160,6 +163,13 @@ async def play(ctx, url: str):
         await voiceChannel.connect()
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
+    # while loop that stays here until currently playing is done (queue)
+    # while (
+    #         voice.is_playing() and len(voiceChannel.members) is not 1
+    # ):
+    #     await asyncio.sleep(1)
+
+    # YouTube api stuff
     ydl_opts = {
         "format": "bestaudio/best",
         "postprocessors": [
