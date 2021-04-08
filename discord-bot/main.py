@@ -92,39 +92,39 @@ except ApiException as e:
 #            print("The event is working")
 
 
-@bot.command()
+@bot.command(brief="prints 'hello_world'", help="prints 'hello_world' our minimal project")
 async def hello_world(ctx):
     await ctx.send("Hello World!")
 
 
-@bot.command()
+@bot.command(brief="prints 'soup!'", help="prints 'soup!' as a Ju-Hung test ")
 async def soup(ctx):
     await ctx.send("Soup!")
 
 
-@bot.command()
+@bot.command(brief="prints 'Becca'", help="prints 'Becca' as a Becca test")
 async def goober(ctx):
     await ctx.send("Becca")
 
 
-@bot.command()
+@bot.command(brief="prints ':angry:'", help="angry emoji command prints ':angry:'")
 async def angry(ctx):
     await ctx.send(":angry:")
 
 
-@bot.command()
+@bot.command(brief="prints ':angry::rage: array'", help="angryarray emoji command prints ':angry::rage: array'")
 async def angryarray(ctx):
     await ctx.send(":angry::rage::angry:\n:rage::angry::rage:" "\n:angry::rage::angry:")
 
 
-@bot.command()
+@bot.command(brief="repeats current song", help="repeats the song that is currently playing")
 async def repeat(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
 
-@bot.command()
+@bot.command(brief="skips to a specific time in the song", help="skips to a specific time in the song \n Usage: !seek 30")
 async def seek(ctx, timestamp: int):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
@@ -140,7 +140,7 @@ async def seek(ctx, timestamp: int):
     )
 
 
-@bot.command()
+@bot.command(brief="plays a given song", help="plays the URL it is given \n Usage: !play https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 async def play(ctx, url: str):
     song = os.path.isfile("song.mp3")
     try:
@@ -195,13 +195,13 @@ async def play(ctx, url: str):
                     await voiceChannel.delete()
 
 
-@bot.command()
+@bot.command(brief="stops the song", help="stops the song that is currently playing")
 async def stop(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
 
 
-@bot.command()
+@bot.command(brief="forces bot leave channel", help="forces bot leave channel")
 async def leave(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     if voice.is_connected():
@@ -210,7 +210,7 @@ async def leave(ctx):
         await ctx.send("The bot is not in a channel.")
 
 
-@bot.command()
+@bot.command(brief="pauses the song", help="pauses the song that is currently playing, use !resume to continue")
 async def pause(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     if voice.is_playing():
@@ -219,7 +219,7 @@ async def pause(ctx):
         await ctx.send("Nothing is playing.")
 
 
-@bot.command()
+@bot.command(brief="resumes playing song", help="plays the song that was last paused")
 async def resume(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     if voice.is_paused():
@@ -228,7 +228,7 @@ async def resume(ctx):
         await ctx.send("Voice is not paused")
 
 
-@bot.command()
+@bot.command(brief="forces the bot to enter channel", help="forces the bot to enter channel \n if channel name is given but not created it will create the channel, if bot is playing in another channel it will resume in the specified channel\nusage: !joinchannel General")
 async def joinchannel(ctx, channel: str):
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
@@ -249,7 +249,7 @@ async def joinchannel(ctx, channel: str):
         await ctx.send(f'Joined channel "{channel}"')
 
 
-@bot.command()
+@bot.command(brief="creates channel", help="creates a channel if the given channel does not already exist")
 async def create(ctx, channel: str):
     guild = ctx.message.guild
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
@@ -263,7 +263,7 @@ async def create(ctx, channel: str):
         await ctx.send(f'Channel "{channel}" already exists')
 
 
-@bot.command()
+@bot.command(brief="removes given voice channel", help="removes give voice channel if it is empty, asks for verification \n usage:!remove general")
 async def remove(ctx, channel: str):
     channel = discord.utils.get(ctx.guild.channels, name=channel)
     channel_members = bot.get_channel(channel.id).members
@@ -294,7 +294,7 @@ async def remove(ctx, channel: str):
         print(channel)
 
 
-@bot.command()
+@bot.command(brief="sets the voice channel bot will be in", help="sets the bot to enter a specific channel \n \nusage: !setchannel room1")
 async def setchannel(ctx, channel: str):
     existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
     guild = ctx.message.guild
@@ -312,7 +312,7 @@ async def setchannel(ctx, channel: str):
         await joinchannel(ctx, channel)
 
 
-@bot.command()
+@bot.command(brief="sets the idle time for the bot to leave", help="how to set the amount of time the bot will sit inactive until leaving\n usage:!setidle 20")
 async def setidle(ctx, seconds: int):
     global idle_timer
     idle_timer = seconds
@@ -320,17 +320,17 @@ async def setidle(ctx, seconds: int):
 
 
 # was working, then stopped. May need a new library or implement manual solution
-@bot.command()
+@bot.command(brief="sends a random meme", help="sends a random meme \n usage: !meme")
 async def meme(ctx):
     await ctx.send(embed=await pyrandmeme())
 
 
-@bot.command()
+@bot.command(brief="sends a special gif", help="BRING IN THE DANCING LOBSTERS")
 async def lobsters(ctx):
     await ctx.send(file=discord.File("lobsters.gif"))
 
 
-@bot.command(name="8ball")
+@bot.command(name="8ball", brief="ask a question and it will answer", help="\n usage: !8ball")
 async def magic_eight_ball(ctx):
     response = [
         "It is certain.",
