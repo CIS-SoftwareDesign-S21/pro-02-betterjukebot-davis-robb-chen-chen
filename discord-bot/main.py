@@ -261,7 +261,7 @@ async def lyrics(ctx):
 
     lyrics_display = musixmatch.track_lyrics_get(15953433)
 
-    await ctx.send(f'{lyrics_display}')
+    await ctx.send(lyrics_display)
 
 
 # Running the bot
