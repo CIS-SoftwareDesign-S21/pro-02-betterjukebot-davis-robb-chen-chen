@@ -238,6 +238,23 @@ async def resume(ctx):
     else:
         await ctx.send("Voice is not paused")
 
+# part of queue implementation, incompatible with current code for play
+# @bot.command()
+# async def skip(ctx):
+#     # copied from stop command
+#     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+#     voice.stop()
+#
+#     global song_queue
+#     url = song_queue.get()
+#
+#     # downloading song into song.mp3, copied from play command
+#     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+#         ydl.download([url])
+#     for file in os.listdir("./"):
+#         if file.endswith(".mp3"):
+#             os.rename(file, "song.mp3")
+#     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
 @bot.command()
 async def joinchannel(ctx, channel: str):
@@ -328,6 +345,13 @@ async def setidle(ctx, seconds: int):
     global idle_timer
     idle_timer = seconds
     await ctx.send(f"The idle time was set to {seconds} seconds")
+
+
+@bot.command()
+async def queue(ctx):
+    global song_queue
+    for song in song_queue:
+        await ctx.send(f"#{str(song_queue.index(song))}: {song}")
 
 
 # was working, then stopped. May need a new library or implement manual solution
