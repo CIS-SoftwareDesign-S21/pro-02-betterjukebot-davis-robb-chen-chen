@@ -106,7 +106,7 @@ async def play(ctx, url: str):
 
     ydl_opts = {
         "format": "bestaudio/best",
-        'addmetadata': True,
+        "addmetadata": True,
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
