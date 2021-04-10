@@ -264,7 +264,7 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx):
-    lyrics_display = musixmatch.matcher_subtitle_get('Sexy and I know it', 'LMFAO', 200, 3)
+    lyrics_display = musixmatch.matcher_lyrics_get('Sexy and I know it', 'LMFAO')
 
     if lyrics_display is not None:
         pprint(lyrics_display)
