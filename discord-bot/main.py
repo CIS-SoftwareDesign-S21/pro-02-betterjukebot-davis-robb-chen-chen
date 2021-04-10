@@ -106,6 +106,7 @@ async def play(ctx, url: str):
 
     ydl_opts = {
         "format": "bestaudio/best",
+        'addmetadata': True,
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
@@ -117,9 +118,11 @@ async def play(ctx, url: str):
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
+        video_title = ydl.info_dict.get('title', None)
     for file in os.listdir("./"):
         if file.endswith(".mp3"):
             os.rename(file, "song.mp3")
+
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
     # idle check
@@ -273,7 +276,7 @@ async def lyrics(ctx):
     if lyrics_display is not None:
         pprint(lyrics_display)
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-        await ctx.send(f"```Now playing: {file.tag.title} Artist: {file.tag.artist} \n {lyrics_to_send}```")
+        await ctx.send(f"```Now playing: {file.tag.title}\nArtist: {file.tag.artist} \n\n\n{lyrics_to_send}```")
     else:
         await ctx.send("Cannot find lyrics for this song :(")
 
