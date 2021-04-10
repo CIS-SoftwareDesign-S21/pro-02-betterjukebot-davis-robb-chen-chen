@@ -347,8 +347,8 @@ async def queue(ctx):
     global song_queue
     for song in song_queue:
         index = song_queue.index(song) + 1
-        song_title = BeautifulSoup(urllib.request.urlopen(song))
-        await ctx.send(f"#{index}: {song_title}")
+        soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
+        await ctx.send(f"#{index}: {soup.title}")
 
 
 # # was working, then stopped. May need a new library or implement manual solution
