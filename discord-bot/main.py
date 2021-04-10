@@ -263,13 +263,14 @@ async def setidle(ctx, seconds: int):
 
 
 @bot.command()
-async def lyrics(ctx):
-    lyrics_display = musixmatch.track_lyrics_get(15953433)
+async def lyrics(ctx, song: str, artist: str):
+    lyrics_display = musixmatch.matcher_subtitle_get(song, artist, 200, 3)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
+        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
         print(lyrics_display["message"]["body"]["lyrics"]["lyrics_body"])
-        await ctx.send(lyrics_display["message"]["body"]["lyrics"]["lyrics_body"])
+        await ctx.send(f"`{lyrics_to_send}`")
 
 
 # Running the bot
