@@ -265,10 +265,10 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx):
-    tag = eyed3.Tag()
-    tag.link("song.mp3")
 
-    lyrics_display = musixmatch.matcher_lyrics_get(tag.getTitle(), tag.getArtist())
+    file = eyed3.load('song.mp3')
+
+    lyrics_display = musixmatch.matcher_lyrics_get(file.tag.title, file.tag.artist)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
