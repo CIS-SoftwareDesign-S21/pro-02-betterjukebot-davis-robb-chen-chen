@@ -263,13 +263,15 @@ async def setidle(ctx, seconds: int):
 
 
 @bot.command()
-async def lyrics(ctx):
-    lyrics_display = musixmatch.matcher_lyrics_get('Sexy and I know it', 'LMFAO')
+async def lyrics(ctx, song: str, artists: str):
+    lyrics_display = musixmatch.matcher_lyrics_get(song, artists)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-        await ctx.send(f"`{lyrics_to_send}`")
+        await ctx.send(f"```{lyrics_to_send}```")
+    else:
+        await ctx.send("Cannot find lyrics for this song :(")
 
 
 # Running the bot
