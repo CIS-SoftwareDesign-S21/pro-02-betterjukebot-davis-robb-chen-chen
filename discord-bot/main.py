@@ -190,7 +190,6 @@ async def play(ctx, url: str):
         await asyncio.sleep(1)
     else:
         if len(voiceChannel.members) != 1:
-            global song_queue
             url = song_queue.pop(0)
             await play(ctx, url)
             return
