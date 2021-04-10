@@ -345,10 +345,14 @@ async def setidle(ctx, seconds: int):
 @bot.command()
 async def queue(ctx):
     global song_queue
+    await ctx.send("Song Queue:")
     for song in song_queue:
         index = song_queue.index(song) + 1
         soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
-        await ctx.send(f"#{index}: {soup.title}")
+        song_title = soup.title
+        song_title.replace("<title>", "")
+        song_title.replace("</title>", "")
+        await ctx.send(f"#{index}: {song_title}")
 
 
 # # was working, then stopped. May need a new library or implement manual solution
