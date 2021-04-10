@@ -178,11 +178,9 @@ async def play(ctx, url: str):
     }
 
     # adding to queue and awaiting next song to be played
+    song_queue.append(url)
     if voice.is_playing():
         await ctx.send("Song added to queue.")
-        song_queue
-        song_queue.append(url)
-        return
     while voice.is_playing() or song_queue[0] is not url: # while song is playing or next song in queue is not url
         await asyncio.sleep(1)
     else:
