@@ -352,7 +352,7 @@ async def queue(ctx):
     for song in song_queue:
         index = song_queue.index(song) + 1
         soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
-        song_title = soup.title
+        song_title = str(soup.title)
         song_title.replace("<title>", "")
         song_title.replace("</title>", "")
         await ctx.send(f"#{index}: {song_title}")
