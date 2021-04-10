@@ -5,13 +5,14 @@ import asyncio
 import youtube_dl
 import random
 import giphy_client
+import urllib2
 
 # import musixmatch
 from giphy_client.rest import ApiException
 from pprint import pprint
 from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
-from queue import Queue
+from bs4 import BeautifulSoup
 
 
 # Creating the Bot
@@ -354,7 +355,9 @@ async def setidle(ctx, seconds: int):
 async def queue(ctx):
     global song_queue
     for song in song_queue:
-        await ctx.send(f"#{song_queue.index(song)}: {song}")
+        index = song_queue.index(song) + 1
+        song_title = BeautifulSoup(urllib2.urlopen(song))
+        await ctx.send(f"#{index}: {song_title}")
 
 
 # # was working, then stopped. May need a new library or implement manual solution
