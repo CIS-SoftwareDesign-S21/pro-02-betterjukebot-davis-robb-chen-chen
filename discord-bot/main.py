@@ -273,7 +273,7 @@ async def lyrics(ctx):
     if lyrics_display is not None:
         pprint(lyrics_display)
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-        await ctx.send(f"```{lyrics_to_send}```")
+        await ctx.send(f"```Now playing: {file.tag.title} Artist: {file.tag.artist} \n {lyrics_to_send}```")
     else:
         await ctx.send("Cannot find lyrics for this song :(")
 
