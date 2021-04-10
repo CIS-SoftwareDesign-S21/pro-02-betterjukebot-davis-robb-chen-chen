@@ -120,6 +120,8 @@ async def play(ctx, url: str):
         if file.endswith(".mp3"):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
+    title = ydl.meta['song.mp3']
+    await ctx.send(title)
 
     # idle check
     global idle_timer
@@ -264,6 +266,7 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx, song: str, artists: str):
+
     lyrics_display = musixmatch.matcher_lyrics_get(song, artists)
 
     if lyrics_display is not None:
