@@ -23,7 +23,7 @@ created_channels = []
 global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
 global song_queue
-song_queue = Queue(maxsize=0)
+song_queue = []
 
 
 @bot.event
@@ -149,10 +149,11 @@ async def play(ctx, url: str):
     try:
         if song:
             os.remove("song.mp3")
-    except PermissionError: # if song is currently being played, add to queue
+    except PermissionError:
         await ctx.send("Song added to queue.")
         global song_queue
-        song_queue.put(url)
+        song_queue.append(url)
+        return
 
     # defining voice channel and joining if not already connected
     print(channel_default)
@@ -175,13 +176,6 @@ async def play(ctx, url: str):
         ],
     }
 
-    # check if song exists in queue (which means another song currently playing)
-    if not song_queue.empty():
-        while voice.is_playing():  # checks if bot is playing music
-            await asyncio.sleep(1)
-        else:
-            url = song_queue.get()
-
     # downloading song into song.mp3
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
@@ -195,7 +189,11 @@ async def play(ctx, url: str):
     while voice.is_playing() and len(voiceChannel.members) != 1:  # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
-
+        if len(voiceChannel.members) != 1:
+            global song_queue
+            url = song_queue.pop(0)
+            await play(ctx, url)
+            return
         await asyncio.sleep(idle_timer)
         while voice.is_playing() and len(voiceChannel.members) != 1:
             break
@@ -351,7 +349,7 @@ async def setidle(ctx, seconds: int):
 async def queue(ctx):
     global song_queue
     for song in song_queue:
-        await ctx.send(f"#{str(song_queue.index(song))}: {song}")
+        await ctx.send(f"#{song_queue.index(song)}: {song}")
 
 
 # # was working, then stopped. May need a new library or implement manual solution
