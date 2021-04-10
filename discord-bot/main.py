@@ -268,8 +268,8 @@ async def lyrics(ctx):
 
     if lyrics_display is not None:
         pprint(lyrics_display)
-        print(lyrics_display["message"]["body"]["lyrics"]["lyrics_body"])
-        await ctx.send(lyrics_display["message"]["body"]["lyrics"]["lyrics_body"])
+        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+        await ctx.send(f"`{lyrics_to_send}`")
 
 
 # Running the bot
