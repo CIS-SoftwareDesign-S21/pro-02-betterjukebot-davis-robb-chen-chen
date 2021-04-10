@@ -5,7 +5,6 @@ import asyncio
 import youtube_dl
 import random
 import giphy_client
-import urllib2
 
 # import musixmatch
 from giphy_client.rest import ApiException
@@ -13,6 +12,7 @@ from pprint import pprint
 from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
 from bs4 import BeautifulSoup
+from urllib2 import urlopen
 
 
 # Creating the Bot
