@@ -118,7 +118,6 @@ async def play(ctx, url: str):
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-        video_title = ydl.info_dict.get('title', None)
     for file in os.listdir("./"):
         if file.endswith(".mp3"):
             os.rename(file, "song.mp3")
@@ -269,7 +268,9 @@ async def setidle(ctx, seconds: int):
 @bot.command()
 async def lyrics(ctx):
 
-    file = eyed3.load('song.mp3')
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            file = eyed3.load(file)
 
     lyrics_display = musixmatch.matcher_lyrics_get(file.tag.title, file.tag.artist)
 
