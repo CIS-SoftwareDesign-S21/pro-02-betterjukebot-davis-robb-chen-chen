@@ -354,10 +354,10 @@ async def queue(ctx):
         await ctx.send(f"#{str(song_queue.index(song))}: {song}")
 
 
-# was working, then stopped. May need a new library or implement manual solution
-@bot.command()
-async def meme(ctx):
-    await ctx.send(embed=await pyrandmeme())
+# # was working, then stopped. May need a new library or implement manual solution
+# @bot.command()
+# async def meme(ctx):
+#     await ctx.send(embed=await pyrandmeme())
 
 
 @bot.command()
