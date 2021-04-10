@@ -3,6 +3,7 @@ from discord.ext.commands import Bot
 import os
 import asyncio
 import youtube_dl
+import eyed3
 from pprint import pprint
 
 from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
@@ -120,8 +121,6 @@ async def play(ctx, url: str):
         if file.endswith(".mp3"):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
-    title = ydl.meta['song.mp3']
-    await ctx.send(title)
 
     # idle check
     global idle_timer
@@ -265,9 +264,11 @@ async def setidle(ctx, seconds: int):
 
 
 @bot.command()
-async def lyrics(ctx, song: str, artists: str):
+async def lyrics(ctx):
+    tag = eyed3.Tag()
+    tag.link("song.mp3")
 
-    lyrics_display = musixmatch.matcher_lyrics_get(song, artists)
+    lyrics_display = musixmatch.matcher_lyrics_get(tag.getTitle(), tag.getArtist())
 
     if lyrics_display is not None:
         pprint(lyrics_display)
