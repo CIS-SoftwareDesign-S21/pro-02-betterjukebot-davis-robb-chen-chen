@@ -215,12 +215,15 @@ async def play(ctx, url: str):
 
 @bot.command()
 async def stop(ctx):
-    song_queue.clear()
+    if song_queue:
+        await ctx.send("Clearing queue...")
+        song_queue.clear()
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
 
 @bot.command()
 async def skip(ctx): # this is the old stop command, only stops current song and doesn't clear queue
+    await ctx.send("Skipping song...")
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
 
