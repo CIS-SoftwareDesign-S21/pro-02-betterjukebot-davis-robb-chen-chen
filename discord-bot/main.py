@@ -176,6 +176,12 @@ async def play(ctx, url: str):
         ],
     }
 
+    if voice.is_playing():
+        await ctx.send("Song added to queue.")
+        global song_queue
+        song_queue.append(url)
+        return
+
     # downloading song into song.mp3
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
