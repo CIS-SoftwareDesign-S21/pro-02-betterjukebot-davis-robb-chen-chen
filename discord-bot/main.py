@@ -264,7 +264,11 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx, song: str, artists: str):
-    lyrics_display = musixmatch.matcher_lyrics_get(song, artists)
+
+    if artists is None:
+        lyrics_display = musixmatch.matcher_lyrics_get(song)
+    else:
+        lyrics_display = musixmatch.matcher_lyrics_get(song, artists)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
