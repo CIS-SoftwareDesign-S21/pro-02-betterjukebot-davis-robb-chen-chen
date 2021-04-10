@@ -215,9 +215,14 @@ async def play(ctx, url: str):
 
 @bot.command()
 async def stop(ctx):
+    song_queue.clear()
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
 
+@bot.command()
+async def skip(ctx): # this is the old stop command, only stops current song and doesn't clear queue
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    voice.stop()
 
 @bot.command()
 async def leave(ctx):
@@ -245,23 +250,6 @@ async def resume(ctx):
     else:
         await ctx.send("Voice is not paused")
 
-# part of queue implementation, incompatible with current code for play
-# @bot.command()
-# async def skip(ctx):
-#     # copied from stop command
-#     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
-#     voice.stop()
-#
-#     global song_queue
-#     url = song_queue.get()
-#
-#     # downloading song into song.mp3, copied from play command
-#     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-#         ydl.download([url])
-#     for file in os.listdir("./"):
-#         if file.endswith(".mp3"):
-#             os.rename(file, "song.mp3")
-#     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
 @bot.command()
 async def joinchannel(ctx, channel: str):
