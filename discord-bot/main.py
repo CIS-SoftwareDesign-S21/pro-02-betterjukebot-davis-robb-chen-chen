@@ -121,8 +121,9 @@ async def play(ctx, url: str):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
     for file in os.listdir("./"):
-        currentSong = file
         if file.endswith(".mp3"):
+            currentSong = file
+            print(currentSong)
             os.rename(file, "song.mp3")
 
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
