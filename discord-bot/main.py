@@ -4,7 +4,6 @@ import os
 import asyncio
 import youtube_dl
 import lyricsgenius
-from music_metadata_extractor import SongData
 
 
 from pprint import pprint
