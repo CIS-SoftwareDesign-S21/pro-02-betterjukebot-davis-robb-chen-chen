@@ -6,9 +6,11 @@ import youtube_dl
 
 from pprint import pprint
 
-from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
+from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN, GENIUS_TOKEN
 from musixmatch import Musixmatch
 musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
+import lyricsgenius
+genius = lyricsgenius.Genius(GENIUS_TOKEN)
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -291,6 +293,9 @@ async def lyrics(ctx):
     pprint(song_id)
 
     lyrics_display = musixmatch.track_lyrics_get(song_id)
+
+    search_result_genius = genius.search_song(currentSong)
+    pprint(search_result_genius)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
