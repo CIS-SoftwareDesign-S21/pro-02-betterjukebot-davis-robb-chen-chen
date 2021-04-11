@@ -6,11 +6,9 @@ import youtube_dl
 
 from pprint import pprint
 
-from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN, GENIUS_TOKEN
+from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
 from musixmatch import Musixmatch
 musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
-import lyricsgenius
-genius = lyricsgenius.Genius(GENIUS_TOKEN)
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -292,15 +290,14 @@ async def lyrics(ctx):
     song_id = search_result["message"]["body"]["track"]["track_id"]
     pprint(song_id)
 
-    lyrics_display = musixmatch.track_lyrics_get(song_id)
+    song_url = search_result["message"]["body"]["track"]["track_share_url"]
 
-    search_result_genius = genius.search_song(song_title)
-    print(search_result_genius)
+    lyrics_display = musixmatch.track_lyrics_get(song_id)
 
     if lyrics_display is not None:
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
         await ctx.send(
-            f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
+            f"```Now playing: {song_title}\nArtist: {song_artist}\n\n\n{lyrics_to_send}\n\n\nFull Lyrics: {song_url}```"
         )
     else:
         await ctx.send("Cannot find lyrics for this song :(")
