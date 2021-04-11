@@ -272,7 +272,7 @@ async def setidle(ctx, seconds: int):
 async def lyrics(ctx):
     global currentSong
 
-    song_detail = str.split('-')
+    song_detail = currentSong.split('-')
     print(song_detail)
 
     song_artist = song_detail[0]
