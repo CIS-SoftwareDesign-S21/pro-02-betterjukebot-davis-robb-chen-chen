@@ -282,6 +282,9 @@ async def lyrics(ctx):
     print(song_title)
     song_title = song_title.replace('.mp3', '')
 
+    song_info = musixmatch.matcher_lyrics_get(song_title, song_artist)
+    pprint(song_info)
+
     lyrics_display = musixmatch.matcher_lyrics_get(song_title, song_artist)
 
     if lyrics_display is not None:
