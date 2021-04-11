@@ -4,6 +4,8 @@ import os
 import asyncio
 import youtube_dl
 import lyricsgenius
+from music_metadata_extractor import SongData
+
 
 from pprint import pprint
 
@@ -120,10 +122,9 @@ async def play(ctx, url: str):
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
+        currentSong = ydl.extract_info(url, download=False)
     for file in os.listdir("./"):
         if file.endswith(".mp3"):
-            currentSong = file
-            print(currentSong)
             os.rename(file, "song.mp3")
 
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
@@ -271,18 +272,9 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx):
-    from ShazamAPI import Shazam
+    global currentSong
 
-    for file in os.listdir("./"):
-        if file.endswith(".mp3"):
-            mp3_file_content_to_recognize = open(file, 'rb').read()
-
-    shazam = Shazam(mp3_file_content_to_recognize)
-    recognize_generator = shazam.recognizeSong()
-
-    while True:
-        print(next(recognize_generator))
-
+    print('{} - {}'.format(currentSong['artist'], currentSong['track']))
 
 
 
