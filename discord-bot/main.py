@@ -3,15 +3,12 @@ from discord.ext.commands import Bot
 import os
 import asyncio
 import youtube_dl
-import lyricsgenius
-
 
 from pprint import pprint
 
-from secrets import DISCORD_TOKEN, GENIUS_TOKEN
-
-from lyricsgenius import Genius
-genius = Genius(GENIUS_TOKEN)
+from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
+from musixmatch import Musixmatch
+musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -275,20 +272,19 @@ async def lyrics(ctx):
     global currentSong
 
     song_detail = currentSong.split('-')
-    song_artist = song_detail[0]
-    song_title = song_detail[1]
-    song_title = song_title.replace('.mp3', '')
+    print(song_detail)
 
-    song_title = genius.search(song_title, per_page=1, page=1, type_='song')
-    print(song_title)
-    song_artist = genius.search(song_artist, per_page=1, page=1, type_='artist')
+    song_artist = song_detail[0]
     print(song_artist)
-    lyrics_display = genius.search_lyrics(currentSong, per_page=1, page=1)
-    print(lyrics_display)
+
+    song_title = song_detail[1]
+    print(song_title)
+
+    lyrics_display = musixmatch.matcher_lyrics_get(song_title, song_artist)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
-        lyrics_to_send = lyrics_display["lyric"]
+        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
         await ctx.send(
             f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
         )
