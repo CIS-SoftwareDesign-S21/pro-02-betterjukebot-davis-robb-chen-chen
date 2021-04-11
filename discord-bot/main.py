@@ -295,7 +295,7 @@ async def lyrics(ctx):
     lyrics_display = musixmatch.track_lyrics_get(song_id)
 
     search_result_genius = genius.search_song(song_title)
-    pprint(search_result_genius)
+    print(search_result_genius)
 
     if lyrics_display is not None:
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
