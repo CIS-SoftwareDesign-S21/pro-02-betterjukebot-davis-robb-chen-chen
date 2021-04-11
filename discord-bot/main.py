@@ -148,7 +148,7 @@ async def play(ctx, url: str):
         song_id = search_result["message"]["body"]["track"]["track_id"]
         song_album = search_result["message"]["body"]["track"]["album_name"]
         song_url = search_result["message"]["body"]["track"]["track_share_url"]
-        has_lyrics = search_result["message"]["body"]["track"]["has_subtitle"]
+        has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
 
         if has_lyrics == 1:
             lyrics_display = musixmatch.track_lyrics_get(song_id)
