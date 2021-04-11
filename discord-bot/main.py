@@ -294,11 +294,10 @@ async def lyrics(ctx):
 
     lyrics_display = musixmatch.track_lyrics_get(song_id)
 
-    search_result_genius = genius.search_song(currentSong)
+    search_result_genius = genius.search_song(song_title, song_artist)
     pprint(search_result_genius)
 
     if lyrics_display is not None:
-        pprint(lyrics_display)
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
         await ctx.send(
             f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
