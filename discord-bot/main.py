@@ -297,9 +297,9 @@ async def lyrics(ctx):
     if lyrics_display is not None:
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
         await ctx.send(
-            f"```Now playing: {song_title}\nArtist: {song_artist}\n\n\n{lyrics_to_send}\n\n\nLike this song? Click ["
-            f"here]({song_url}) for full lyrics``` "
+            f"```Now playing: {song_title}\nArtist: {song_artist}\n\n\n{lyrics_to_send}```"
         )
+        await ctx.send(f"Like this song? Click [here]({song_url}) for full lyrics")
 
     else:
         await ctx.send("Cannot find lyrics for this song :(")
