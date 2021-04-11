@@ -108,7 +108,6 @@ async def play(ctx, url: str):
 
     ydl_opts = {
         "format": "bestaudio/best",
-        "add-metadata": True,
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
@@ -271,18 +270,20 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx):
+    global currentSong
 
-    for file in os.listdir("./"):
-        if file.endswith(".mp3"):
-            file = eyed3.load(file)
+    song_detail = musixmatch.matcher_track_get(currentSong, currentSong)
+    pprint(song_detail)
+    song_title = song_detail["title"]
+    song_artist = song_detail["artist"]
 
-    lyrics_display = musixmatch.matcher_lyrics_get(file.tag.title, file.tag.artist)
+    lyrics_display = musixmatch.matcher_lyrics_get(song_title, song_artist)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
         await ctx.send(
-            f"```Now playing: {file.tag.title}\nArtist: {file.tag.artist} \n\n\n{lyrics_to_send}```"
+            f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
         )
     else:
         await ctx.send("Cannot find lyrics for this song :(")
