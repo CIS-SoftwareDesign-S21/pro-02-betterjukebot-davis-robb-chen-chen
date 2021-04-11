@@ -273,8 +273,7 @@ async def setidle(ctx, seconds: int):
 async def lyrics(ctx):
     global currentSong
 
-    print('{} - {}'.format(currentSong['artist'], currentSong['track']))
-
+    print(currentSong)
 
 
 # Running the bot
