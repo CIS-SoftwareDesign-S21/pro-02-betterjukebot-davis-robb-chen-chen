@@ -272,13 +272,16 @@ async def setidle(ctx, seconds: int):
 async def lyrics(ctx):
     global currentSong
 
-    lyrics_display = musixmatch.matcher_lyrics_get(currentSong, currentSong)
+    song_detail = str.split("-", 2)
+    song_artist = song_detail[1]
+    song_title = song_detail[3]
+    lyrics_display = musixmatch.matcher_lyrics_get(song_title, song_artist)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
         lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
         await ctx.send(
-            f"```Now playing: {currentSong}\nArtist: {currentSong} \n\n\n{lyrics_to_send}```"
+            f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
         )
     else:
         await ctx.send("Cannot find lyrics for this song :(")
