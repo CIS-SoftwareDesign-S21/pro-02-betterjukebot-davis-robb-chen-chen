@@ -128,41 +128,42 @@ async def play(ctx, url: str):
     if display_lyrics is True:
         lyrics_channel = discord.utils.get(ctx.guild.text_channels, name='lyrics')
         guild = ctx.message.guild
+
         if lyrics_channel is None:
             await guild.create_text_channel('lyrics')
+
+        song_detail = currentSong.split('-')
+        print(song_detail)
+
+        song_artist = song_detail[0]
+        song_title = song_detail[1]
+        song_title = song_title.replace('.mp3', '')
+
+        search_result = musixmatch.matcher_track_get(song_title, song_artist)
+        pprint(search_result)
+
+        song_artist = search_result["message"]["body"]["track"]["artist_name"]
+        pprint(song_artist)
+
+        song_title = search_result["message"]["body"]["track"]["track_name"]
+        pprint(song_title)
+
+        song_id = search_result["message"]["body"]["track"]["track_id"]
+        pprint(song_id)
+
+        song_url = search_result["message"]["body"]["track"]["track_share_url"]
+
+        lyrics_display = musixmatch.track_lyrics_get(song_id)
+
+        if lyrics_display is not None:
+            lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+            await lyrics_channel.send(
+                f"```Now playing: {song_title}\nArtist: {song_artist}\n\n\n{lyrics_to_send}```"
+            )
+            await lyrics_channel.send("Like this song? Click the link for full lyrics")
+            await lyrics_channel.send(f"{song_url}")
         else:
-            song_detail = currentSong.split('-')
-            print(song_detail)
-
-            song_artist = song_detail[0]
-            song_title = song_detail[1]
-            song_title = song_title.replace('.mp3', '')
-
-            search_result = musixmatch.matcher_track_get(song_title, song_artist)
-            pprint(search_result)
-
-            song_artist = search_result["message"]["body"]["track"]["artist_name"]
-            pprint(song_artist)
-
-            song_title = search_result["message"]["body"]["track"]["track_name"]
-            pprint(song_title)
-
-            song_id = search_result["message"]["body"]["track"]["track_id"]
-            pprint(song_id)
-
-            song_url = search_result["message"]["body"]["track"]["track_share_url"]
-
-            lyrics_display = musixmatch.track_lyrics_get(song_id)
-
-            if lyrics_display is not None:
-                lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-                await lyrics_channel.send(
-                    f"```Now playing: {song_title}\nArtist: {song_artist}\n\n\n{lyrics_to_send}```"
-                )
-                await lyrics_channel.send("Like this song? Click the link for full lyrics")
-                await lyrics_channel.send(f"{song_url}")
-            else:
-                await lyrics_channel.send("Cannot find lyrics for this song :(")
+            await lyrics_channel.send("Cannot find lyrics for this song :(")
 
     # idle check
     global idle_timer
@@ -308,12 +309,13 @@ async def setidle(ctx, seconds: int):
 @bot.command()
 async def lyrics(ctx, command: str):
     global display_lyrics
-
+    existing_channel = discord.utils.get(ctx.guild.channels, name='lyrics')
     if command == 'on':
         display_lyrics = True
         await ctx.send("Displaying Lyrics : ON")
     elif command == 'off':
         display_lyrics = False
+        await existing_channel.delete()
         await ctx.send("Displaying Lyrics : OFF")
     else:
         await ctx.send("I cannot understand your command :(")
