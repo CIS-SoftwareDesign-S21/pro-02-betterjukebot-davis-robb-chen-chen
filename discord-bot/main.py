@@ -20,7 +20,6 @@ global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
 global display_lyrics
 display_lyrics = True
-global currentSong
 
 
 @bot.event
@@ -86,7 +85,6 @@ async def seek(ctx, timestamp: int):
 
 @bot.command()
 async def play(ctx, url: str):
-    global currentSong
     song = os.path.isfile("song.mp3")
     try:
         if song:
@@ -125,6 +123,46 @@ async def play(ctx, url: str):
             os.rename(file, "song.mp3")
 
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
+
+# finding lyrics and sent to test channel
+    if display_lyrics is True:
+        lyrics_channel = discord.utils.get(ctx.guild.text_channels, name='lyrics')
+        guild = ctx.message.guild
+        if lyrics_channel is None:
+            await guild.create_text_channel('lyrics')
+        else:
+            song_detail = currentSong.split('-')
+            print(song_detail)
+
+            song_artist = song_detail[0]
+            song_title = song_detail[1]
+            song_title = song_title.replace('.mp3', '')
+
+            search_result = musixmatch.matcher_track_get(song_title, song_artist)
+            pprint(search_result)
+
+            song_artist = search_result["message"]["body"]["track"]["artist_name"]
+            pprint(song_artist)
+
+            song_title = search_result["message"]["body"]["track"]["track_name"]
+            pprint(song_title)
+
+            song_id = search_result["message"]["body"]["track"]["track_id"]
+            pprint(song_id)
+
+            song_url = search_result["message"]["body"]["track"]["track_share_url"]
+
+            lyrics_display = musixmatch.track_lyrics_get(song_id)
+
+            if lyrics_display is not None:
+                lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+                await lyrics_channel.send(
+                    f"```Now playing: {song_title}\nArtist: {song_artist}\n\n\n{lyrics_to_send}```"
+                )
+                await lyrics_channel.send("Like this song? Click the link for full lyrics")
+                await lyrics_channel.send(f"{song_url}")
+            else:
+                await lyrics_channel.send("Cannot find lyrics for this song :(")
 
     # idle check
     global idle_timer
@@ -268,41 +306,17 @@ async def setidle(ctx, seconds: int):
 
 
 @bot.command()
-async def lyrics(ctx):
-    global currentSong
+async def lyrics(ctx, command: str):
+    global display_lyrics
 
-    song_detail = currentSong.split('-')
-    print(song_detail)
-
-    song_artist = song_detail[0]
-    song_title = song_detail[1]
-    song_title = song_title.replace('.mp3', '')
-
-    search_result = musixmatch.matcher_track_get(song_title, song_artist)
-    pprint(search_result)
-
-    song_artist = search_result["message"]["body"]["track"]["artist_name"]
-    pprint(song_artist)
-
-    song_title = search_result["message"]["body"]["track"]["track_name"]
-    pprint(song_title)
-
-    song_id = search_result["message"]["body"]["track"]["track_id"]
-    pprint(song_id)
-
-    song_url = search_result["message"]["body"]["track"]["track_share_url"]
-
-    lyrics_display = musixmatch.track_lyrics_get(song_id)
-
-    if lyrics_display is not None:
-        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-        await ctx.send(
-            f"```Now playing: {song_title}\nArtist: {song_artist}\n\n\n{lyrics_to_send}```"
-        )
-        await ctx.send(f"Like this song? Click [here]({song_url}) for full lyrics")
-
+    if command == 'on':
+        display_lyrics = True
+        await ctx.send("Displaying Lyrics : ON")
+    elif command == 'off':
+        display_lyrics = False
+        await ctx.send("Displaying Lyrics : OFF")
     else:
-        await ctx.send("Cannot find lyrics for this song :(")
+        await ctx.send("I cannot understand your command :(")
 
 
 # Running the bot
