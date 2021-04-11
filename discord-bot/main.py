@@ -279,12 +279,17 @@ async def lyrics(ctx):
     song_title = song_title.replace('.mp3', '')
 
     search_result = musixmatch.track_search(q_track=song_title, q_artist=song_artist, page_size=10, page=1, s_track_rating='desc')
-    song_artist = search_result["message"]["body"]["track_list"]["track"]["artist_name"]
-    print(song_artist)
+    pprint(search_result)
+
+    song_artist = search_result['message']['body']['track_list']['track']['artist_name']
+    pprint(song_artist)
+
     song_title = search_result["message"]["body"]["track_list"]["track"]["track_name"]
-    print(song_title)
+    pprint(song_title)
+
     song_id = search_result["message"]["body"]["track_list"]["track"]["track_id"]
-    print(song_id)
+    pprint(song_id)
+
     lyrics_display = musixmatch.track_lyrics_get(song_id)
 
     if lyrics_display is not None:
