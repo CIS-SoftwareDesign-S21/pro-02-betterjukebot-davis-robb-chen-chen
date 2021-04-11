@@ -294,7 +294,7 @@ async def lyrics(ctx):
 
     lyrics_display = musixmatch.track_lyrics_get(song_id)
 
-    search_result_genius = genius.search_song(song_title, song_artist)
+    search_result_genius = genius.search_song(song_title)
     pprint(search_result_genius)
 
     if lyrics_display is not None:
