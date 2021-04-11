@@ -3,13 +3,14 @@ from discord.ext.commands import Bot
 import os
 import asyncio
 import youtube_dl
-import eyed3
+import lyricsgenius
+
 from pprint import pprint
 
-from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
-from musixmatch import Musixmatch
+from secrets import DISCORD_TOKEN, GENIUS_TOKEN
 
-musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
+from lyricsgenius import Genius
+genius = Genius(GENIUS_TOKEN)
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -270,31 +271,19 @@ async def setidle(ctx, seconds: int):
 
 @bot.command()
 async def lyrics(ctx):
-    global currentSong
+    from ShazamAPI import Shazam
 
-    song_detail = currentSong.split('-')
-    print(song_detail)
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            mp3_file_content_to_recognize = open(file, 'rb').read()
 
-    song_artist = song_detail[0]
-    print(song_artist)
+    shazam = Shazam(mp3_file_content_to_recognize)
+    recognize_generator = shazam.recognizeSong()
 
-    song_title = song_detail[1]
-    print(song_title)
-    song_title = song_title.replace('.mp3', '')
+    while True:
+        print(next(recognize_generator))
 
-    song_info = musixmatch.matcher_lyrics_get(song_title, song_artist)
-    pprint(song_info)
 
-    lyrics_display = musixmatch.matcher_lyrics_get(song_title, song_artist)
-
-    if lyrics_display is not None:
-        pprint(lyrics_display)
-        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-        await ctx.send(
-            f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
-        )
-    else:
-        await ctx.send("Cannot find lyrics for this song :(")
 
 
 # Running the bot
