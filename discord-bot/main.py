@@ -131,6 +131,7 @@ async def play(ctx, url: str):
 
         if lyrics_channel is None:
             await guild.create_text_channel('lyrics')
+            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name='lyrics')
 
         song_detail = currentSong.split('-')
         print(song_detail)
