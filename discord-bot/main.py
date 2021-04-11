@@ -121,9 +121,10 @@ async def play(ctx, url: str):
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-        currentSong = ydl.extract_info(url, download=False)
     for file in os.listdir("./"):
         if file.endswith(".mp3"):
+            currentSong = file
+            print(currentSong)
             os.rename(file, "song.mp3")
 
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
@@ -273,7 +274,29 @@ async def setidle(ctx, seconds: int):
 async def lyrics(ctx):
     global currentSong
 
-    print(currentSong)
+    song_detail = currentSong.split('-')
+    print(song_detail)
+
+    song_artist = song_detail[0]
+    print(song_artist)
+
+    song_title = song_detail[1]
+    print(song_title)
+    song_title = song_title.replace('.mp3', '')
+
+    song_title = genius.search(currentSong, per_page=None, page=None, type_='song')
+    song_artist = genius.search(currentSong, per_page=None, page=None, type_='artist')
+
+    lyrics_display = genius.search(currentSong, per_page=None, page=None, type_='lyric')
+
+    if lyrics_display is not None:
+        pprint(lyrics_display)
+        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+        await ctx.send(
+            f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
+        )
+    else:
+        await ctx.send("Cannot find lyrics for this song :(")
 
 
 # Running the bot
