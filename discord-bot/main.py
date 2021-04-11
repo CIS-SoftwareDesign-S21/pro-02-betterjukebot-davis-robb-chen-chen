@@ -275,19 +275,16 @@ async def lyrics(ctx):
     global currentSong
 
     song_detail = currentSong.split('-')
-    print(song_detail)
-
     song_artist = song_detail[0]
-    print(song_artist)
-
     song_title = song_detail[1]
-    print(song_title)
     song_title = song_title.replace('.mp3', '')
 
     song_title = genius.search(currentSong, per_page=None, page=None, type_='song')
+    print(song_title)
     song_artist = genius.search(currentSong, per_page=None, page=None, type_='artist')
-
+    print(song_artist)
     lyrics_display = genius.search(currentSong, per_page=None, page=None, type_='lyric')
+    print(lyrics_display)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
