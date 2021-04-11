@@ -273,8 +273,14 @@ async def lyrics(ctx):
     global currentSong
 
     song_detail = str.split("-", 2)
+    print(song_detail)
+
     song_artist = song_detail[1]
+    print(song_artist)
+
     song_title = song_detail[3]
+    print(song_title)
+
     lyrics_display = musixmatch.matcher_lyrics_get(song_title, song_artist)
 
     if lyrics_display is not None:
