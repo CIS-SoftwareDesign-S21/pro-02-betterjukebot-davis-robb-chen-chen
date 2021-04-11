@@ -281,7 +281,7 @@ async def lyrics(ctx):
     search_result = musixmatch.track_search(q_track=song_title, q_artist=song_artist, page_size=10, page=1, s_track_rating='desc')
     pprint(search_result)
 
-    song_artist = search_result['message']['body']['track_list']['track']['artist_name']
+    song_artist = search_result["message"]["body"]["track_list"]
     pprint(song_artist)
 
     song_title = search_result["message"]["body"]["track_list"]["track"]["track_name"]
