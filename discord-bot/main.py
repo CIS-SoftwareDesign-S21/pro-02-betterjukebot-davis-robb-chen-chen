@@ -6,12 +6,14 @@ import asyncio
 import youtube_dl
 import random
 import giphy_client
+import urllib.request
 
 # import musixmatch
 from giphy_client.rest import ApiException
 from pprint import pprint
 from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
+from bs4 import BeautifulSoup
 
 
 # Creating the Bot
@@ -22,6 +24,8 @@ global created_channels
 created_channels = []
 global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
+global song_queue
+song_queue = []
 
 
 @bot.event
@@ -157,19 +161,21 @@ async def play(ctx, url: str):
         if song:
             os.remove("song.mp3")
     except PermissionError:
-        await ctx.send(
-            "Cannot play another song until song currently playing is complete"
-        )
+        await ctx.send("Song added to queue.")
+        global song_queue
+        song_queue.append(url)
         return
 
+    # defining voice channel and joining if not already connected
     print(channel_default)
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     print(voiceChannel)
-    if voice == None:
+    if voice is None:
         await voiceChannel.connect()
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
 
+    # YouTube api stuff
     ydl_opts = {
         "format": "bestaudio/best",
         "postprocessors": [
@@ -181,6 +187,16 @@ async def play(ctx, url: str):
         ],
     }
 
+    # adding to queue and awaiting next song to be played
+    song_queue.append(url)
+    if voice.is_playing():
+        await ctx.send("Song added to queue.")
+    while voice.is_playing() or song_queue[0] is not url: # while song is playing or next song in queue is not url
+        await asyncio.sleep(1)
+    else:
+        song_queue.pop(0)
+
+    # downloading song into song.mp3
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
     for file in os.listdir("./"):
@@ -188,15 +204,17 @@ async def play(ctx, url: str):
             os.rename(file, "song.mp3")
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
-    # idle check
+    # idle check ***could possible be moved into a @tasks or a listener method***
     global idle_timer
-    while (
-        voice.is_playing() and len(voiceChannel.members) is not 1
-    ):  # checks if bot is playing music/if bot alone in voice
+    while voice.is_playing() and len(voiceChannel.members) != 1:  # checks if bot is playing music/if bot alone in voice
         await asyncio.sleep(1)
     else:
+        if len(voiceChannel.members) != 1:
+            url = song_queue.pop(0)
+            await play(ctx, url)
+            return
         await asyncio.sleep(idle_timer)
-        while voice.is_playing() and len(voiceChannel.members) is not 1:
+        while voice.is_playing() and len(voiceChannel.members) != 1:
             break
         else:
             await voice.disconnect()
@@ -207,9 +225,17 @@ async def play(ctx, url: str):
 
 @bot.command()
 async def stop(ctx):
+    if song_queue:
+        await ctx.send("Clearing queue...")
+        song_queue.clear()
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
 
+@bot.command()
+async def skip(ctx): # this is the old stop command, only stops current song and doesn't clear queue
+    await ctx.send("Skipping song...")
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    voice.stop()
 
 @bot.command()
 async def leave(ctx):
@@ -329,10 +355,21 @@ async def setidle(ctx, seconds: int):
     await ctx.send(f"The idle time was set to {seconds} seconds")
 
 
-# was working, then stopped. May need a new library or implement manual solution
 @bot.command()
-async def meme(ctx):
-    await ctx.send(embed=await pyrandmeme())
+async def queue(ctx):
+    for song in song_queue:
+        index = song_queue.index(song) + 1
+        soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
+        song_title = str(soup.title)
+        song_title = song_title.replace("<title>", "")
+        song_title = song_title.replace("</title>", "")
+        await ctx.send(f"#{index}: {song_title}")
+
+
+# # was working, then stopped. May need a new library or implement manual solution
+# @bot.command()
+# async def meme(ctx):
+#     await ctx.send(embed=await pyrandmeme())
 
 
 @bot.command()
