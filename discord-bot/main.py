@@ -279,16 +279,17 @@ async def lyrics(ctx):
     song_title = song_detail[1]
     song_title = song_title.replace('.mp3', '')
 
-    song_title = genius.search(currentSong, per_page=None, page=None, type_='song')
+
+    song_title = genius.search(currentSong, per_page=1, page=None, type_='song')
     print(song_title)
-    song_artist = genius.search(currentSong, per_page=None, page=None, type_='artist')
+    song_artist = genius.search(currentSong, per_page=1, page=None, type_='artist')
     print(song_artist)
-    lyrics_display = genius.search(currentSong, per_page=None, page=None, type_='lyric')
+    lyrics_display = genius.search(currentSong, per_page=1, page=None, type_='lyric')
     print(lyrics_display)
 
     if lyrics_display is not None:
         pprint(lyrics_display)
-        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+        lyrics_to_send = lyrics_display["lyric"]
         await ctx.send(
             f"```Now playing: {song_title}\nArtist: {song_artist} \n\n\n{lyrics_to_send}```"
         )
