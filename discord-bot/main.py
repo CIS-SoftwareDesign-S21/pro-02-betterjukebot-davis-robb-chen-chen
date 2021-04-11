@@ -275,10 +275,10 @@ async def lyrics(ctx):
     song_detail = str.split("- ")
     print(song_detail)
 
-    song_artist = song_detail[1]
+    song_artist = song_detail[0]
     print(song_artist)
 
-    song_title = song_detail[3]
+    song_title = song_detail[1]
     print(song_title)
 
     lyrics_display = musixmatch.matcher_lyrics_get(song_title, song_artist)
