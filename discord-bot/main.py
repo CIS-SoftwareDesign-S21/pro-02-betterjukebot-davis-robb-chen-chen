@@ -8,7 +8,6 @@ import random
 import giphy_client
 import urllib.request
 
-<<<<<<< HEAD
 # import musixmatch
 from giphy_client.rest import ApiException
 from pprint import pprint
@@ -16,13 +15,12 @@ from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
 from bs4 import BeautifulSoup
 
-=======
 from pprint import pprint
 
 from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
 from musixmatch import Musixmatch
+
 musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
->>>>>>> lyrics
 
 # Creating the Bot
 bot = Bot(command_prefix="!")
@@ -32,13 +30,10 @@ global created_channels
 created_channels = []
 global idle_timer
 idle_timer = 300  # seconds (default 5 minutes)
-<<<<<<< HEAD
 global song_queue
 song_queue = []
-=======
 global display_lyrics
 display_lyrics = True
->>>>>>> lyrics
 
 
 @bot.event
@@ -204,7 +199,9 @@ async def play(ctx, url: str):
     song_queue.append(url)
     if voice.is_playing():
         await ctx.send("Song added to queue.")
-    while voice.is_playing() or song_queue[0] is not url: # while song is playing or next song in queue is not url
+    while (
+        voice.is_playing() or song_queue[0] is not url
+    ):  # while song is playing or next song in queue is not url
         await asyncio.sleep(1)
     else:
         song_queue.pop(0)
@@ -222,22 +219,24 @@ async def play(ctx, url: str):
 
     # idle check ***could possible be moved into a @tasks or a listener method***
     global idle_timer
-    while voice.is_playing() and len(voiceChannel.members) != 1:  # checks if bot is playing music/if bot alone in voice
-# finding lyrics and sent to test channel
-    if display_lyrics is True:
-        lyrics_channel = discord.utils.get(ctx.guild.text_channels, name='lyrics')
-        guild = ctx.message.guild
+    while (
+        voice.is_playing() and len(voiceChannel.members) != 1
+    ):  # checks if bot is playing music/if bot alone in voice
+        # finding lyrics and sent to test channel
+        if display_lyrics is True:
+            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
+            guild = ctx.message.guild
 
         if lyrics_channel is None:
-            await guild.create_text_channel('lyrics')
-            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name='lyrics')
+            await guild.create_text_channel("lyrics")
+            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
 
-        song_detail = currentSong.split('-')
+        song_detail = currentSong.split("-")
         print(song_detail)
 
         song_artist = song_detail[0]
         song_title = song_detail[1]
-        song_title = song_title.replace('.mp3', '')
+        song_title = song_title.replace(".mp3", "")
 
         search_result = musixmatch.matcher_track_get(song_title, song_artist)
         pprint(search_result)
@@ -256,10 +255,14 @@ async def play(ctx, url: str):
                 f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
             )
             embed = discord.Embed(title="")
-            embed.description = f"Like this song? Click [here]({song_url}) for full lyrics"
+            embed.description = (
+                f"Like this song? Click [here]({song_url}) for full lyrics"
+            )
             await lyrics_channel.send(embed=embed)
         else:
-            await lyrics_channel.send(f"There is no lyrics available for {song_title} :(")
+            await lyrics_channel.send(
+                f"There is no lyrics available for {song_title} :("
+            )
 
     # idle check
     global idle_timer
@@ -290,11 +293,15 @@ async def stop(ctx):
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
 
+
 @bot.command()
-async def skip(ctx): # this is the old stop command, only stops current song and doesn't clear queue
+async def skip(
+    ctx,
+):  # this is the old stop command, only stops current song and doesn't clear queue
     await ctx.send("Skipping song...")
     voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     voice.stop()
+
 
 @bot.command()
 async def leave(ctx):
@@ -415,7 +422,6 @@ async def setidle(ctx, seconds: int):
 
 
 @bot.command()
-<<<<<<< HEAD
 async def queue(ctx):
     for song in song_queue:
         index = song_queue.index(song) + 1
@@ -477,20 +483,21 @@ async def search_gifs(query):
 
     except ApiException as e:
         return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
-=======
+
+
+@bot.command()
 async def lyrics(ctx, command: str):
     global display_lyrics
-    existing_channel = discord.utils.get(ctx.guild.channels, name='lyrics')
-    if command == 'on':
+    existing_channel = discord.utils.get(ctx.guild.channels, name="lyrics")
+    if command == "on":
         display_lyrics = True
         await ctx.send("Displaying Lyrics : ON")
-    elif command == 'off':
+    elif command == "off":
         display_lyrics = False
         await existing_channel.delete()
         await ctx.send("Displaying Lyrics : OFF")
     else:
         await ctx.send("I cannot understand your command :(")
->>>>>>> lyrics
 
 
 # Running the bot
