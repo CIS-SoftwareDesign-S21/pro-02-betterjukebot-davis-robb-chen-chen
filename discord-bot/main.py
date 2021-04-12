@@ -218,42 +218,42 @@ async def play(ctx, url: str):
         lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
         guild = ctx.message.guild
 
-    if lyrics_channel is None:
-        await guild.create_text_channel("lyrics")
-        lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
+        if lyrics_channel is None:
+            await guild.create_text_channel("lyrics")
+            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
 
-    song_detail = currentSong.split("-")
-    print(song_detail)
+        song_detail = currentSong.split("-")
+        print(song_detail)
 
-    song_artist = song_detail[0]
-    song_title = song_detail[1]
-    song_title = song_title.replace(".mp3", "")
+        song_artist = song_detail[0]
+        song_title = song_detail[1]
+        song_title = song_title.replace(".mp3", "")
 
-    search_result = musixmatch.matcher_track_get(song_title, song_artist)
-    pprint(search_result)
+        search_result = musixmatch.matcher_track_get(song_title, song_artist)
+        pprint(search_result)
 
-    song_artist = search_result["message"]["body"]["track"]["artist_name"]
-    song_title = search_result["message"]["body"]["track"]["track_name"]
-    song_id = search_result["message"]["body"]["track"]["track_id"]
-    song_album = search_result["message"]["body"]["track"]["album_name"]
-    song_url = search_result["message"]["body"]["track"]["track_share_url"]
-    has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+        song_artist = search_result["message"]["body"]["track"]["artist_name"]
+        song_title = search_result["message"]["body"]["track"]["track_name"]
+        song_id = search_result["message"]["body"]["track"]["track_id"]
+        song_album = search_result["message"]["body"]["track"]["album_name"]
+        song_url = search_result["message"]["body"]["track"]["track_share_url"]
+        has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
 
-    if has_lyrics == 1:
-        lyrics_display = musixmatch.track_lyrics_get(song_id)
-        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-        await lyrics_channel.send(
-            f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
-        )
-        embed = discord.Embed(title=f"{song_title}")
-        embed.description = (
-            f"Like this song? Click [here]({song_url}) for full lyrics"
-        )
-        await lyrics_channel.send(embed=embed)
-    else:
-        await lyrics_channel.send(
-            f"There is no lyrics available for {song_title} :("
-        )
+        if has_lyrics == 1:
+            lyrics_display = musixmatch.track_lyrics_get(song_id)
+            lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+            await lyrics_channel.send(
+                f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
+            )
+            embed = discord.Embed(title=f"{song_title}")
+            embed.description = (
+                f"Like this song? Click [here]({song_url}) for full lyrics"
+            )
+            await lyrics_channel.send(embed=embed)
+        else:
+            await lyrics_channel.send(
+                f"There is no lyrics available for {song_title} :("
+            )
 
     # idle check
     global idle_timer
