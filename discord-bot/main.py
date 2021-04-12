@@ -7,17 +7,11 @@ import youtube_dl
 import random
 import giphy_client
 import urllib.request
-
-# import musixmatch
 from giphy_client.rest import ApiException
 from pprint import pprint
-from secrets import DISCORD_TOKEN, GIPHY_TOKEN
+from secrets import DISCORD_TOKEN, GIPHY_TOKEN, MUSIXMATCH_TOKEN
 from pyrandmeme import *
 from bs4 import BeautifulSoup
-
-from pprint import pprint
-
-from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
 from musixmatch import Musixmatch
 
 musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
@@ -217,15 +211,10 @@ async def play(ctx, url: str):
 
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
-    # idle check ***could possible be moved into a @tasks or a listener method***
-    global idle_timer
-    while (
-        voice.is_playing() and len(voiceChannel.members) != 1
-    ):  # checks if bot is playing music/if bot alone in voice
-        # finding lyrics and sent to test channel
-        if display_lyrics is True:
-            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
-            guild = ctx.message.guild
+    # finding lyrics and sent to test channel
+    if display_lyrics is True:
+        lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
+        guild = ctx.message.guild
 
         if lyrics_channel is None:
             await guild.create_text_channel("lyrics")
@@ -254,7 +243,7 @@ async def play(ctx, url: str):
             await lyrics_channel.send(
                 f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
             )
-            embed = discord.Embed(title="")
+            embed = discord.Embed(title=f"{song_title}")
             embed.description = (
                 f"Like this song? Click [here]({song_url}) for full lyrics"
             )
@@ -432,10 +421,25 @@ async def queue(ctx):
         await ctx.send(f"#{index}: {song_title}")
 
 
-# # was working, then stopped. May need a new library or implement manual solution
-# @bot.command()
-# async def meme(ctx):
-#     await ctx.send(embed=await pyrandmeme())
+@bot.command()
+async def lyrics(ctx, command: str):
+    global display_lyrics
+    existing_channel = discord.utils.get(ctx.guild.channels, name="lyrics")
+    if command == "on":
+        display_lyrics = True
+        await ctx.send("Displaying Lyrics : ON")
+    elif command == "off":
+        display_lyrics = False
+        await existing_channel.delete()
+        await ctx.send("Displaying Lyrics : OFF")
+    else:
+        await ctx.send("I cannot understand your command :(")
+
+
+# was working, then stopped. May need a new library or implement manual solution
+@bot.command()
+async def meme(ctx):
+    await ctx.send(embed=await pyrandmeme())
 
 
 @bot.command()
@@ -483,21 +487,6 @@ async def search_gifs(query):
 
     except ApiException as e:
         return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
-
-
-@bot.command()
-async def lyrics(ctx, command: str):
-    global display_lyrics
-    existing_channel = discord.utils.get(ctx.guild.channels, name="lyrics")
-    if command == "on":
-        display_lyrics = True
-        await ctx.send("Displaying Lyrics : ON")
-    elif command == "off":
-        display_lyrics = False
-        await existing_channel.delete()
-        await ctx.send("Displaying Lyrics : OFF")
-    else:
-        await ctx.send("I cannot understand your command :(")
 
 
 # Running the bot
