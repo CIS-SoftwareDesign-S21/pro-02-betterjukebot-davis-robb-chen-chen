@@ -7,15 +7,11 @@ import youtube_dl
 import random
 import giphy_client
 import urllib.request
-
-# import musixmatch
 from giphy_client.rest import ApiException
 from pprint import pprint
 from secrets import DISCORD_TOKEN, GIPHY_TOKEN
 from pyrandmeme import *
 from bs4 import BeautifulSoup
-
-from pprint import pprint
 
 from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
 from musixmatch import Musixmatch
