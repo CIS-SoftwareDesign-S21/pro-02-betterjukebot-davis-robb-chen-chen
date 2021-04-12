@@ -245,7 +245,7 @@ async def play(ctx, url: str):
         await lyrics_channel.send(
             f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
         )
-        embed = discord.Embed(title="")
+        embed = discord.Embed(title=f"{song_title}")
         embed.description = (
             f"Like this song? Click [here]({song_url}) for full lyrics"
         )
