@@ -213,52 +213,47 @@ async def play(ctx, url: str):
 
     voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
-    # idle check ***could possible be moved into a @tasks or a listener method***
-    global idle_timer
-    while (
-        voice.is_playing() and len(voiceChannel.members) != 1
-    ):  # checks if bot is playing music/if bot alone in voice
-        # finding lyrics and sent to test channel
-        if display_lyrics is True:
-            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
-            guild = ctx.message.guild
+    # finding lyrics and sent to test channel
+    if display_lyrics is True:
+        lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
+        guild = ctx.message.guild
 
-        if lyrics_channel is None:
-            await guild.create_text_channel("lyrics")
-            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
+    if lyrics_channel is None:
+        await guild.create_text_channel("lyrics")
+        lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
 
-        song_detail = currentSong.split("-")
-        print(song_detail)
+    song_detail = currentSong.split("-")
+    print(song_detail)
 
-        song_artist = song_detail[0]
-        song_title = song_detail[1]
-        song_title = song_title.replace(".mp3", "")
+    song_artist = song_detail[0]
+    song_title = song_detail[1]
+    song_title = song_title.replace(".mp3", "")
 
-        search_result = musixmatch.matcher_track_get(song_title, song_artist)
-        pprint(search_result)
+    search_result = musixmatch.matcher_track_get(song_title, song_artist)
+    pprint(search_result)
 
-        song_artist = search_result["message"]["body"]["track"]["artist_name"]
-        song_title = search_result["message"]["body"]["track"]["track_name"]
-        song_id = search_result["message"]["body"]["track"]["track_id"]
-        song_album = search_result["message"]["body"]["track"]["album_name"]
-        song_url = search_result["message"]["body"]["track"]["track_share_url"]
-        has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+    song_artist = search_result["message"]["body"]["track"]["artist_name"]
+    song_title = search_result["message"]["body"]["track"]["track_name"]
+    song_id = search_result["message"]["body"]["track"]["track_id"]
+    song_album = search_result["message"]["body"]["track"]["album_name"]
+    song_url = search_result["message"]["body"]["track"]["track_share_url"]
+    has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
 
-        if has_lyrics == 1:
-            lyrics_display = musixmatch.track_lyrics_get(song_id)
-            lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-            await lyrics_channel.send(
-                f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
-            )
-            embed = discord.Embed(title="")
-            embed.description = (
-                f"Like this song? Click [here]({song_url}) for full lyrics"
-            )
-            await lyrics_channel.send(embed=embed)
-        else:
-            await lyrics_channel.send(
-                f"There is no lyrics available for {song_title} :("
-            )
+    if has_lyrics == 1:
+        lyrics_display = musixmatch.track_lyrics_get(song_id)
+        lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+        await lyrics_channel.send(
+            f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
+        )
+        embed = discord.Embed(title="")
+        embed.description = (
+            f"Like this song? Click [here]({song_url}) for full lyrics"
+        )
+        await lyrics_channel.send(embed=embed)
+    else:
+        await lyrics_channel.send(
+            f"There is no lyrics available for {song_title} :("
+        )
 
     # idle check
     global idle_timer
@@ -428,10 +423,25 @@ async def queue(ctx):
         await ctx.send(f"#{index}: {song_title}")
 
 
-# # was working, then stopped. May need a new library or implement manual solution
-# @bot.command()
-# async def meme(ctx):
-#     await ctx.send(embed=await pyrandmeme())
+@bot.command()
+async def lyrics(ctx, command: str):
+    global display_lyrics
+    existing_channel = discord.utils.get(ctx.guild.channels, name="lyrics")
+    if command == "on":
+        display_lyrics = True
+        await ctx.send("Displaying Lyrics : ON")
+    elif command == "off":
+        display_lyrics = False
+        await existing_channel.delete()
+        await ctx.send("Displaying Lyrics : OFF")
+    else:
+        await ctx.send("I cannot understand your command :(")
+
+
+# was working, then stopped. May need a new library or implement manual solution
+@bot.command()
+async def meme(ctx):
+    await ctx.send(embed=await pyrandmeme())
 
 
 @bot.command()
@@ -479,21 +489,6 @@ async def search_gifs(query):
 
     except ApiException as e:
         return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
-
-
-@bot.command()
-async def lyrics(ctx, command: str):
-    global display_lyrics
-    existing_channel = discord.utils.get(ctx.guild.channels, name="lyrics")
-    if command == "on":
-        display_lyrics = True
-        await ctx.send("Displaying Lyrics : ON")
-    elif command == "off":
-        display_lyrics = False
-        await existing_channel.delete()
-        await ctx.send("Displaying Lyrics : OFF")
-    else:
-        await ctx.send("I cannot understand your command :(")
 
 
 # Running the bot
