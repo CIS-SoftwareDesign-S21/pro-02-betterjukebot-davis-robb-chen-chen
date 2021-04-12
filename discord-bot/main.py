@@ -9,11 +9,9 @@ import giphy_client
 import urllib.request
 from giphy_client.rest import ApiException
 from pprint import pprint
-from secrets import DISCORD_TOKEN, GIPHY_TOKEN
+from secrets import DISCORD_TOKEN, GIPHY_TOKEN, MUSIXMATCH_TOKEN
 from pyrandmeme import *
 from bs4 import BeautifulSoup
-
-from secrets import DISCORD_TOKEN, MUSIXMATCH_TOKEN
 from musixmatch import Musixmatch
 
 musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
