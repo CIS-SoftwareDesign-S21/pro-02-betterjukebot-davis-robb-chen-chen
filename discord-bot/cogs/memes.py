@@ -5,6 +5,7 @@ from discord.ext import commands
 from secrets import GIPHY_TOKEN
 from giphy_client.rest import ApiException
 from pprint import pprint
+from pyrandmeme import *
 
 #########################################################
 # Create an instance of the API class
