@@ -34,7 +34,7 @@ class Memes(commands.Cog):
         # Whenever a user other than bot says "hi"
         if message.content == "hi":
             await message.channel.send("Hi there!!! " + message.author.mention)
-            await message.channel.send(await search_gifs(self, "hi"))
+            await message.channel.send(await search_gifs("hi"))
 
         elif message.content == "hello":
             await message.channel.send("Hello :) " + message.author.mention)
@@ -76,7 +76,7 @@ class Memes(commands.Cog):
 
     @commands.command()
     async def lobsters(self, ctx):
-        await ctx.send(file=discord.File("lobsters.gif"))
+        await ctx.send(file=discord.File("discord-bot/lobsters.gif"))
 
     @commands.command(name="8ball")
     async def magic_eight_ball(self, ctx):

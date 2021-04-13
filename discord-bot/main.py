@@ -444,7 +444,7 @@ async def meme(ctx):
 
 @bot.command()
 async def lobsters(ctx):
-    await ctx.send(file=discord.File("lobsters.gif"))
+    await ctx.send(file=discord.File("discord-bot/lobsters.gif"))
 
 
 @bot.command(name="8ball")
