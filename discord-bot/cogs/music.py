@@ -9,6 +9,8 @@ from discord.ext import commands
 from musixmatch import Musixmatch
 from pprint import pprint
 
+musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
+
 global channel_default
 channel_default = "general"
 global created_channels
