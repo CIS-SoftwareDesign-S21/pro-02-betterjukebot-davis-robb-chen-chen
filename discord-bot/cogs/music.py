@@ -184,6 +184,15 @@ class Music(commands.Cog):
         voice.stop()
 
     @commands.command()
+    async def leave(self, ctx):
+    voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+    if voice.is_connected():
+        await voice.disconnect()
+    else:
+        await ctx.send("The bot is not in a channel.")
+
+
+    @commands.command()
     async def pause(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_playing():
