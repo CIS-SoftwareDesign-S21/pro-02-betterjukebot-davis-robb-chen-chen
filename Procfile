@@ -1,2 +1,2 @@
-worker: python discord-bot/main.py
-web: python discord-bot/main.py
+worker: python discord-bot/main2.py
+web: python discord-bot/main2.py
