@@ -29,7 +29,7 @@ class Memes(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
+    @commands.Cog.listener("on_message")
     async def trigger_words(self, message):
         # Whenever a user other than bot says "hi"
         if message.content == "hi":
