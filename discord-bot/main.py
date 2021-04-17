@@ -450,7 +450,7 @@ async def searchlyrics(ctx, song_title: str, song_artist=None):
         # search for lyrics
         search_result = musixmatch.matcher_track_get(song_title, song_artist)
         pprint(search_result)
-        status_code = ["message"]["body"]["header"]["status_code"]
+        status_code = ["message"]["header"]["status_code"]
 
         if status_code == 404:
             await ctx.send("Cannot find lyrics for this song :(")
