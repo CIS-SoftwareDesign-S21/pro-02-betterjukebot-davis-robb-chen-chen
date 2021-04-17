@@ -243,7 +243,8 @@ async def play(ctx, url: str):
                 name=f"Now playing: {song_title}",
                 description=f"Artist: {song_artist}\nAlbum: {song_album}",
                 color=0x5cf5a6)
-            embed.add_field(value=f"{lyrics_to_send}\n\nLike this song? Click [here]({song_url}) for full lyrics")
+            embed.add_field(name="",
+                            value=f"{lyrics_to_send}\n\nLike this song? Click [here]({song_url}) for full lyrics")
             await lyrics_channel.send(embed=embed)
         else:
             await lyrics_channel.send(
