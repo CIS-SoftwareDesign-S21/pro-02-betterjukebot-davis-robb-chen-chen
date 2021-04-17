@@ -236,17 +236,17 @@ async def play(ctx, url: str):
         song_album = search_result["message"]["body"]["track"]["album_name"]
         song_url = search_result["message"]["body"]["track"]["track_share_url"]
         has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+        song_cover = search_result["message"]["body"]["track"]["album_coverart_100x100"]
 
         if has_lyrics == 1:
             lyrics_display = musixmatch.track_lyrics_get(song_id)
             lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-            await lyrics_channel.send(
-                f"```Now playing: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}\n\n\n{lyrics_to_send}```"
-            )
-            embed = discord.Embed(title=f"{song_title}")
-            embed.description = (
-                f"Like this song? Click [here]({song_url}) for full lyrics"
-            )
+            embed = discord.Embed(
+                name=f"Now playing: {song_title}",
+                description=f"Artist: {song_artist}\nAlbum: {song_album}",
+                color=0x5cf5a6)
+            embed.add_field(value=f"{lyrics_to_send}\n\nLike this song? Click [here]({song_url}) for full lyrics")
+            embed.set_thumbnail(url=f"{song_cover}")
             await lyrics_channel.send(embed=embed)
         else:
             await lyrics_channel.send(
