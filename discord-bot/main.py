@@ -474,9 +474,11 @@ async def searchlyrics(ctx, song_title: str, song_artist=None):
                                           color=0xff3838)
                     embed.add_field(name="Lyrics:",
                                     value=f"{lyrics_send}\n\nClick [here]({song_url}) for full lyrics")
+                    await ctx.send("Lyrics found! Please check search result")
                     await search_channel.send(embed=embed)
                 else:
                     await ctx.send("There is no lyrics available for this song :(")
+
 
 # was working, then stopped. May need a new library or implement manual solution
 @bot.command()
