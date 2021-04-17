@@ -449,6 +449,7 @@ async def searchlyrics(ctx, song_title: str, song_artist: str):
 
     # search for lyrics
     search_result = musixmatch.matcher_track_get(song_title, song_artist)
+    pprint(search_result)
     song_artist = search_result["message"]["body"]["track"]["artist_name"]
     song_title = search_result["message"]["body"]["track"]["track_name"]
     song_id = search_result["message"]["body"]["track"]["track_id"]
