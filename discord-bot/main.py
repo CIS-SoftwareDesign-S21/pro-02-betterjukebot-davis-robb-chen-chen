@@ -228,28 +228,32 @@ async def play(ctx, url: str):
         song_title = song_title.replace(".mp3", "")
 
         search_result = musixmatch.matcher_track_get(song_title, song_artist)
+        status_code = search_result["message"]["header"]["status_code"]
 
-        song_artist = search_result["message"]["body"]["track"]["artist_name"]
-        song_title = search_result["message"]["body"]["track"]["track_name"]
-        song_id = search_result["message"]["body"]["track"]["track_id"]
-        song_album = search_result["message"]["body"]["track"]["album_name"]
-        song_url = search_result["message"]["body"]["track"]["track_share_url"]
-        has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
-
-        if has_lyrics == 1:
-            lyrics_display = musixmatch.track_lyrics_get(song_id)
-            lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
-            embed = discord.Embed(
-                title=f"Now playing: {song_title}",
-                description=f"Artist: {song_artist}\nAlbum: {song_album}",
-                color=0x5cf5a6)
-            embed.add_field(name="Lyrics:",
-                            value=f"{lyrics_to_send}\n\nLike this song? Click [here]({song_url}) for full lyrics")
-            await lyrics_channel.send(embed=embed)
+        if status_code == 404:
+            await ctx.send("Cannot find lyrics for this song :(")
         else:
-            await lyrics_channel.send(
-                f"There is no lyrics available for {song_title} :("
-            )
+            song_artist = search_result["message"]["body"]["track"]["artist_name"]
+            song_title = search_result["message"]["body"]["track"]["track_name"]
+            song_id = search_result["message"]["body"]["track"]["track_id"]
+            song_album = search_result["message"]["body"]["track"]["album_name"]
+            song_url = search_result["message"]["body"]["track"]["track_share_url"]
+            has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+
+            if has_lyrics == 1:
+                lyrics_display = musixmatch.track_lyrics_get(song_id)
+                lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
+                embed = discord.Embed(
+                    title=f"Now playing: {song_title}",
+                    description=f"Artist: {song_artist}\nAlbum: {song_album}",
+                    color=0x5cf5a6)
+                embed.add_field(name="Lyrics:",
+                                value=f"{lyrics_to_send}\n\nLike this song? Click [here]({song_url}) for full lyrics")
+                await lyrics_channel.send(embed=embed)
+            else:
+                await lyrics_channel.send(
+                    f"There is no lyrics available for {song_title} :("
+                )
 
     # idle check
     global idle_timer
@@ -439,41 +443,40 @@ async def searchlyrics(ctx, song_title: str, song_artist=None):
     search_channel = discord.utils.get(ctx.guild.channels, name="search-result")
     guild = ctx.message.guild
 
-    if song_title == "off" and song_artist is None:
+    if song_title == "clear" and song_artist is None:
         await search_channel.delete()
-
-    # create test channel if does not exist
-    if search_channel is None:
-        await guild.create_text_channel("search result")
-        search_channel = discord.utils.get(ctx.guild.text_channels, name="search-result")
     else:
-        # search for lyrics
-        search_result = musixmatch.matcher_track_get(song_title, song_artist)
-        pprint(search_result)
-        status_code = search_result["message"]["header"]["status_code"]
-
-        if status_code == 404:
-            await ctx.send("Cannot find lyrics for this song :(")
+        # create test channel if does not exist
+        if search_channel is None:
+            await guild.create_text_channel("search result")
+            search_channel = discord.utils.get(ctx.guild.text_channels, name="search-result")
         else:
-            song_artist = search_result["message"]["body"]["track"]["artist_name"]
-            song_title = search_result["message"]["body"]["track"]["track_name"]
-            song_id = search_result["message"]["body"]["track"]["track_id"]
-            song_album = search_result["message"]["body"]["track"]["album_name"]
-            song_url = search_result["message"]["body"]["track"]["track_share_url"]
-            has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+            # search for lyrics
+            search_result = musixmatch.matcher_track_get(song_title, song_artist)
+            status_code = search_result["message"]["header"]["status_code"]
 
-            # check if has lyrics
-            if has_lyrics == 1:
-                lyrics_search = musixmatch.track_lyrics_get(song_id)
-                lyrics_send = lyrics_search["message"]["body"]["lyrics"]["lyrics_body"]
-                embed = discord.Embed(title="Search Result:",
-                                      description=f"Song Title: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}",
-                                      color=0xff3838)
-                embed.add_field(name="Lyrics:",
-                                value=f"{lyrics_send}\n\nClick [here]({song_url}) for full lyrics")
-                await search_channel.send(embed=embed)
+            if status_code == 404:
+                await ctx.send("Cannot find lyrics for this song :(")
             else:
-                await ctx.send("There is no lyrics available for this song :(")
+                song_artist = search_result["message"]["body"]["track"]["artist_name"]
+                song_title = search_result["message"]["body"]["track"]["track_name"]
+                song_id = search_result["message"]["body"]["track"]["track_id"]
+                song_album = search_result["message"]["body"]["track"]["album_name"]
+                song_url = search_result["message"]["body"]["track"]["track_share_url"]
+                has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+
+                # check if has lyrics
+                if has_lyrics == 1:
+                    lyrics_search = musixmatch.track_lyrics_get(song_id)
+                    lyrics_send = lyrics_search["message"]["body"]["lyrics"]["lyrics_body"]
+                    embed = discord.Embed(title="Search Result:",
+                                          description=f"Song Title: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}",
+                                          color=0xff3838)
+                    embed.add_field(name="Lyrics:",
+                                    value=f"{lyrics_send}\n\nClick [here]({song_url}) for full lyrics")
+                    await search_channel.send(embed=embed)
+                else:
+                    await ctx.send("There is no lyrics available for this song :(")
 
 # was working, then stopped. May need a new library or implement manual solution
 @bot.command()
