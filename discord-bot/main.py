@@ -240,7 +240,7 @@ async def play(ctx, url: str):
             lyrics_display = musixmatch.track_lyrics_get(song_id)
             lyrics_to_send = lyrics_display["message"]["body"]["lyrics"]["lyrics_body"]
             embed = discord.Embed(
-                name=f"Now playing: {song_title}",
+                title=f"Now playing: {song_title}",
                 description=f"Artist: {song_artist}\nAlbum: {song_album}",
                 color=0x5cf5a6)
             embed.add_field(name="Lyrics:",
