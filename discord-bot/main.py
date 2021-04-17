@@ -235,11 +235,6 @@ async def play(ctx, url: str):
         song_album = search_result["message"]["body"]["track"]["album_name"]
         song_url = search_result["message"]["body"]["track"]["track_share_url"]
         has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
-        song_album_id = search_result["message"]["body"]["track"]["album_id"]
-
-        album_get_result = musixmatch.album_get(song_album_id)
-        pprint(album_get_result)
-        song_cover = album_get_result["message"]["body"]["album"]["album_coverart_100x100"]
 
         if has_lyrics == 1:
             lyrics_display = musixmatch.track_lyrics_get(song_id)
@@ -249,7 +244,6 @@ async def play(ctx, url: str):
                 description=f"Artist: {song_artist}\nAlbum: {song_album}",
                 color=0x5cf5a6)
             embed.add_field(value=f"{lyrics_to_send}\n\nLike this song? Click [here]({song_url}) for full lyrics")
-            embed.set_thumbnail(url=f"{song_cover}")
             await lyrics_channel.send(embed=embed)
         else:
             await lyrics_channel.send(
