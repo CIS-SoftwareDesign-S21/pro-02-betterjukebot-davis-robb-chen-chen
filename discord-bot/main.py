@@ -228,7 +228,6 @@ async def play(ctx, url: str):
         song_title = song_title.replace(".mp3", "")
 
         search_result = musixmatch.matcher_track_get(song_title, song_artist)
-        pprint(search_result)
 
         song_artist = search_result["message"]["body"]["track"]["artist_name"]
         song_title = search_result["message"]["body"]["track"]["track_name"]
@@ -237,7 +236,9 @@ async def play(ctx, url: str):
         song_url = search_result["message"]["body"]["track"]["track_share_url"]
         has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
         song_album_id = search_result["message"]["body"]["track"]["album_id"]
+
         album_get_result = musixmatch.album_get(song_album_id)
+        pprint(album_get_result)
         song_cover = album_get_result["message"]["body"]["album"]["album_coverart_100x100"]
 
         if has_lyrics == 1:
