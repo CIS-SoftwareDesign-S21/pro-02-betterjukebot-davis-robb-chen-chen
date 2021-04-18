@@ -476,7 +476,7 @@ async def searchlyrics(ctx, song_title: str, song_artist=None):
                 await ctx.send("Lyrics found! Please check search result")
                 await search_channel.send(embed=embed)
             else:
-                await ctx.send("There is no lyrics available for this song :(")
+                await ctx.send("There is no lyrics available for this song :( :(")
 
 
 # was working, then stopped. May need a new library or implement manual solution
