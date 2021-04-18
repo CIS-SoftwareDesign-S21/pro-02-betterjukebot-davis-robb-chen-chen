@@ -31,13 +31,15 @@ class Moderation(commands.Cog):
 
     @commands.command()
     async def addrole(self, ctx, role: discord.Role, user: discord.Member):
-        await user.add_roles(role)
-        await ctx.sned(f'Successfully given {role.mention} to {user.mention}')
+        if ctx.author.guild_permissions.administrator:
+            await user.add_roles(role)
+            await ctx.send(f'Successfully given {role.mention} to {user.mention}.')
 
     @commands.command()
     async def removerole(self, ctx, role: discord.Role, user: discord.Member):
-        await user.add_roles(role)
-        await ctx.sned(f'Successfully given {role.mention} to {user.mention}')
+        if ctx.author.guild_permissions.administrator:
+            await user.remove_roles(role)
+            await ctx.send(f'Successfully removed {role.mention} to {user.mention}.')
 
 
 def setup(bot):
