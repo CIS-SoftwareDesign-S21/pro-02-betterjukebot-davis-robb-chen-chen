@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/phaceial/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot/venv"
+set -gx VIRTUAL_ENV "/Users/rebeccarobb/Documents/GitHub/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

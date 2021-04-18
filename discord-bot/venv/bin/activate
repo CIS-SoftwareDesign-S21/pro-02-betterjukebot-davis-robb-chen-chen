@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/phaceial/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot/venv"
+VIRTUAL_ENV="/Users/rebeccarobb/Documents/GitHub/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

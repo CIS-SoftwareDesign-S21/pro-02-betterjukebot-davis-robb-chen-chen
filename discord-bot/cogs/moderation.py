@@ -29,6 +29,18 @@ class Moderation(commands.Cog):
                 await ctx.send(f"fUnbanned {user.mention}")
                 return
 
+    @commands.command()
+    async def addrole(self, ctx, role: discord.Role, user: discord.Member):
+        if ctx.author.guild_permissions.administrator:
+            await user.add_roles(role)
+            await ctx.send(f'Successfully given {role.mention} to {user.mention}.')
+
+    @commands.command()
+    async def removerole(self, ctx, role: discord.Role, user: discord.Member):
+        if ctx.author.guild_permissions.administrator:
+            await user.remove_roles(role)
+            await ctx.send(f'Successfully removed {role.mention} to {user.mention}.')
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

@@ -8,7 +8,7 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV "/home/phaceial/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot/venv"
+setenv VIRTUAL_ENV "/Users/rebeccarobb/Documents/GitHub/pro-02-betterjukebot-davis-robb-chen-chen/discord-bot/venv"
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"
