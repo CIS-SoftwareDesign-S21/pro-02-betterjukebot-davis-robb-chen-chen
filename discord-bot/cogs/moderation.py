@@ -26,8 +26,18 @@ class Moderation(commands.Cog):
 
             if(user.name, user.discriminator) == (member_name, member_discriminator):
                 await ctx.guild.unban(user)
-                await ctx.send(f'fUnbanned {user.mention}')
+                await ctx.send(f'Unbanned {user.mention}')
                 return
+
+    @commands.command()
+    async def addrole(self, ctx, role: discord.Role, user: discord.Member):
+        await user.add_roles(role)
+        await ctx.sned(f'Successfully given {role.mention} to {user.mention}')
+
+    @commands.command()
+    async def removerole(self, ctx, role: discord.Role, user: discord.Member):
+        await user.add_roles(role)
+        await ctx.sned(f'Successfully given {role.mention} to {user.mention}')
 
 
 def setup(bot):
