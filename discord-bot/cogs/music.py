@@ -409,5 +409,6 @@ class Music(commands.Cog):
                 else:
                     await ctx.send("There is no lyrics available for this song :( :(")
 
-    def setup(bot):
-        bot.add_cog(Music(bot))
+
+def setup(bot):
+    bot.add_cog(Music(bot))
