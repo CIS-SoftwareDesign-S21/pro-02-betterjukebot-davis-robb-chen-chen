@@ -41,7 +41,7 @@ async def angryarray(ctx):
     await ctx.send(":angry::rage::angry:\n:rage::angry::rage:" "\n:angry::rage::angry:")
 
 
-for filename in os.listdir("discord-bot/cogs"):
+for filename in os.listdir("cogs"):
     if filename.endswith(".py"):
         bot.load_extension(f"cogs.{filename[:-3]}")
 
