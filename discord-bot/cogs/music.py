@@ -27,14 +27,18 @@ class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(brief="repeats current song", help="repeats the song that is currently playing")
+    @commands.command(
+        brief="repeats current song", help="repeats the song that is currently playing"
+    )
     async def repeat(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         voice.stop()
         voice.play(discord.FFmpegPCMAudio("song.mp3"))
 
-    @commands.command(brief="skips to a specific time in the song",
-                      help="skips to a specific time in the song \n Usage: !seek 30")
+    @commands.command(
+        brief="skips to a specific time in the song",
+        help="skips to a specific time in the song \n Usage: !seek 30",
+    )
     async def seek(self, ctx, timestamp: int):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         voice.stop()
@@ -49,8 +53,10 @@ class Music(commands.Cog):
             )
         )
 
-    @commands.command(brief="plays a given song",
-                      help="plays the URL it is given \n Usage: !play https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    @commands.command(
+        brief="plays a given song",
+        help="plays the URL it is given \n Usage: !play https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    )
     async def play(self, ctx, url: str):
         song = os.path.isfile("song.mp3")
         try:
@@ -88,7 +94,7 @@ class Music(commands.Cog):
         if voice.is_playing():
             await ctx.send("Song added to queue.")
         while (
-                voice.is_playing() or song_queue[0] is not url
+            voice.is_playing() or song_queue[0] is not url
         ):  # while song is playing or next song in queue is not url
             await asyncio.sleep(1)
         else:
@@ -154,7 +160,7 @@ class Music(commands.Cog):
         # idle check
         global idle_timer
         while (
-                voice.is_playing() and len(voiceChannel.members) is not 1
+            voice.is_playing() and len(voiceChannel.members) != 1
         ):  # checks if bot is playing music/if bot alone in voice
             await asyncio.sleep(1)
         else:
@@ -171,7 +177,9 @@ class Music(commands.Cog):
                     if voiceChannel == created:
                         await voiceChannel.delete()
 
-    @commands.command(brief="stops the song", help="stops the song that is currently playing")
+    @commands.command(
+        brief="stops the song", help="stops the song that is currently playing"
+    )
     async def stop(self, ctx):
         if song_queue:
             await ctx.send("Clearing queue...")
@@ -179,9 +187,11 @@ class Music(commands.Cog):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         voice.stop()
 
-    @commands.command(brief="skips the song", help="skips the song that is currently playing")
+    @commands.command(
+        brief="skips the song", help="skips the song that is currently playing"
+    )
     async def skip(
-            self, ctx
+        self, ctx
     ):  # this is the old stop command, only stops current song and doesn't clear queue
         await ctx.send("Skipping song...")
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
@@ -195,8 +205,10 @@ class Music(commands.Cog):
         else:
             await ctx.send("The bot is not in a channel.")
 
-    @commands.command(brief="pauses the song",
-                      help="pauses the song that is currently playing, use !resume to continue")
+    @commands.command(
+        brief="pauses the song",
+        help="pauses the song that is currently playing, use !resume to continue",
+    )
     async def pause(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_playing():
@@ -204,7 +216,9 @@ class Music(commands.Cog):
         else:
             await ctx.send("Nothing is playing.")
 
-    @commands.command(brief="resumes playing song", help="plays the song that was last paused")
+    @commands.command(
+        brief="resumes playing song", help="plays the song that was last paused"
+    )
     async def resume(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_paused():
@@ -212,8 +226,10 @@ class Music(commands.Cog):
         else:
             await ctx.send("Voice is not paused")
 
-    @commands.command(brief="forces the bot to enter channel",
-                      help="forces the bot to enter channel \n if channel name is given but not created it will create the channel, if bot is playing in another channel it will resume in the specified channel\nUsage: !joinchannel General")
+    @commands.command(
+        brief="forces the bot to enter channel",
+        help="forces the bot to enter channel \n if channel name is given but not created it will create the channel, if bot is playing in another channel it will resume in the specified channel\nUsage: !joinchannel General",
+    )
     async def joinchannel(self, ctx, channel: str):
         voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
@@ -233,7 +249,10 @@ class Music(commands.Cog):
             await voiceChannel.connect()
             await ctx.send(f'Joined channel "{channel}"')
 
-    @commands.command(brief="creates channel", help="creates a channel if the given channel does not already exist")
+    @commands.command(
+        brief="creates channel",
+        help="creates a channel if the given channel does not already exist",
+    )
     async def create(self, ctx, channel: str):
         guild = ctx.message.guild
         existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
@@ -246,8 +265,10 @@ class Music(commands.Cog):
         else:
             await ctx.send(f'Channel "{channel}" already exists')
 
-    @commands.command(brief="removes given voice channel",
-                      help="removes give voice channel if it is empty, asks for verification \nUsage:!remove general")
+    @commands.command(
+        brief="removes given voice channel",
+        help="removes give voice channel if it is empty, asks for verification \nUsage:!remove general",
+    )
     async def remove(self, ctx, channel: str):
         channel = discord.utils.get(ctx.guild.channels, name=channel)
         channel_members = self.bot.get_channel(channel.id).members
@@ -260,9 +281,9 @@ class Music(commands.Cog):
             # below are requirements for user input, if not y or n will not accept the input
             def check(msg):
                 return (
-                        msg.author == ctx.author
-                        and msg.channel == ctx.channel
-                        and msg.content.lower() in ["y", "n"]
+                    msg.author == ctx.author
+                    and msg.channel == ctx.channel
+                    and msg.content.lower() in ["y", "n"]
                 )
 
             msg = await self.bot.wait_for(
@@ -283,8 +304,10 @@ class Music(commands.Cog):
             print(channel_members)
             print(channel)
 
-    @commands.command(brief="sets the voice channel bot will be in",
-                      help="sets the bot to enter a specific channel \n \nUsage: !setchannel room1")
+    @commands.command(
+        brief="sets the voice channel bot will be in",
+        help="sets the bot to enter a specific channel \n \nUsage: !setchannel room1",
+    )
     async def setchannel(self, ctx, channel: str):
         existing_channel = discord.utils.get(ctx.guild.channels, name=channel)
         guild = ctx.message.guild
@@ -301,8 +324,10 @@ class Music(commands.Cog):
             await ctx.send("Channel created and set to default playing channel")
             await self.bot.joinchannel(ctx, channel)
 
-    @commands.command(brief="sets the idle time for the bot to leave",
-                      help="how to set the amount of time the bot will sit inactive until leaving\n usage:!setidle 20")
+    @commands.command(
+        brief="sets the idle time for the bot to leave",
+        help="how to set the amount of time the bot will sit inactive until leaving\n usage:!setidle 20",
+    )
     async def setidle(self, ctx, seconds: int):
         global idle_timer
         idle_timer = seconds
@@ -318,8 +343,11 @@ class Music(commands.Cog):
             song_title = song_title.replace("</title>", "")
             await ctx.send(f"#{index}: {song_title}")
 
-    @commands.command(brief="displays song lyrics", help="displays the song lyrics that is currently playing "
-                                                                "in the #lyrics channel")
+    @commands.command(
+        brief="displays song lyrics",
+        help="displays the song lyrics that is currently playing "
+        "in the #lyrics channel",
+    )
     async def lyrics(self, ctx, command: str):
         global display_lyrics
         existing_channel = discord.utils.get(ctx.guild.channels, name="lyrics")
@@ -333,6 +361,53 @@ class Music(commands.Cog):
         else:
             await ctx.send("I cannot understand your command :(")
 
+    @commands.command()
+    async def searchlyrics(ctx, song_title: str, song_artist=None):
+        search_channel = discord.utils.get(ctx.guild.channels, name="search-result")
+        guild = ctx.message.guild
 
-def setup(bot):
-    bot.add_cog(Music(bot))
+        if song_title == "clear" and song_artist is None:
+            await search_channel.delete()
+        else:
+            # create test channel if does not exist
+            if search_channel is None:
+                await guild.create_text_channel("search result")
+                search_channel = discord.utils.get(
+                    ctx.guild.text_channels, name="search-result"
+                )
+            # search for lyrics
+            search_result = musixmatch.matcher_track_get(song_title, song_artist)
+            status_code = search_result["message"]["header"]["status_code"]
+
+            if status_code == 404:
+                await ctx.send("Cannot find lyrics for this song :(")
+            else:
+                song_artist = search_result["message"]["body"]["track"]["artist_name"]
+                song_title = search_result["message"]["body"]["track"]["track_name"]
+                song_id = search_result["message"]["body"]["track"]["track_id"]
+                song_album = search_result["message"]["body"]["track"]["album_name"]
+                song_url = search_result["message"]["body"]["track"]["track_share_url"]
+                has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+
+                # check if has lyrics
+                if has_lyrics == 1:
+                    lyrics_search = musixmatch.track_lyrics_get(song_id)
+                    lyrics_send = lyrics_search["message"]["body"]["lyrics"][
+                        "lyrics_body"
+                    ]
+                    embed = discord.Embed(
+                        title="Search Result:",
+                        description=f"Song Title: {song_title}\nArtist: {song_artist}\nAlbum: {song_album}",
+                        color=0xFF3838,
+                    )
+                    embed.add_field(
+                        name="Lyrics:",
+                        value=f"{lyrics_send}\n\nClick [here]({song_url}) for full lyrics",
+                    )
+                    await ctx.send("Lyrics found! Please check search result")
+                    await search_channel.send(embed=embed)
+                else:
+                    await ctx.send("There is no lyrics available for this song :( :(")
+
+    def setup(bot):
+        bot.add_cog(Music(bot))
