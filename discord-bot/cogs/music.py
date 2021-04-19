@@ -216,7 +216,7 @@ class Music(commands.Cog):
     )
     async def voteskip(self, ctx):
         current_voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        if ctx.author.voice.channel is None or ctx.author.voice.channel is not current_voice.channel:
+        if ctx.author.voice is None or ctx.author.voice.channel is not current_voice.channel:
             await ctx.send("You need to join the voice channel first!")
             return
         if len(song_queue) is 0:
