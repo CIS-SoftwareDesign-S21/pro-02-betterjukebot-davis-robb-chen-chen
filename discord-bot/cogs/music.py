@@ -100,7 +100,9 @@ class Music(commands.Cog):
         ):  # while song is playing or next song in queue is not url
             await asyncio.sleep(1)
         else:
-            song_queue.pop(0)
+            # updating the now_playing variable
+            global now_playing
+            now_playing = song_queue.pop(0)
 
         # downloading song into song.mp3
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -109,9 +111,6 @@ class Music(commands.Cog):
             if file.endswith(".mp3"):
                 currentSong = file
                 print(currentSong)
-                # updating the now_playing variable
-                global now_playing
-                now_playing = currentSong
                 os.rename(file, "song.mp3")
 
         voice.play(discord.FFmpegPCMAudio("song.mp3"))
@@ -428,11 +427,10 @@ class Music(commands.Cog):
         )
     async def nowplaying(self, ctx):
         global now_playing
-        # copied from Ju-Hung's lyrics code
-        song_detail = now_playing.split("-")
-        # song_artist = song_detail[0]
-        song_title = song_detail[1]
-        song_title = song_title.replace(".mp3", "")
+        soup = BeautifulSoup(urllib.request.urlopen(now_playing), "html.parser")
+        song_title = str(soup.title)
+        song_title = song_title.replace("<title>", "")
+        song_title = song_title.replace("</title>", "")
         if discord.utils.get(self.bot.voice_clients, guild=ctx.guild) is None:
             await ctx.send("Bot is not currently in a voice channel! Try using the !play command.")
         else:
