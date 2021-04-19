@@ -204,7 +204,7 @@ class Music(commands.Cog):
 
     @commands.command(
         brief="vote to skip the song",
-        help="starts a vote to skip the song that is currently playing, requires majority vote"
+        help="starts a vote to skip the song that is currently playing, requires majority vote from in voice channel"
     )
     async def voteskip(self, ctx):
         current_voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
@@ -223,11 +223,11 @@ class Music(commands.Cog):
             return
         else:
             vote_skips.append(ctx.message.author.id)
-            await ctx.send(f"You voted to skip the song! {len(vote_skips)}/{required} votes")
+            await ctx.send(f"You voted to skip the song! ({len(vote_skips)}/{required} votes collected)")
 
         if len(vote_skips) >= required:
             vote_skips.clear()
-            await ctx.send("Skipping song...")
+            await ctx.send("Majority vote collected! Skipping song...")
             current_voice.stop()
 
 
