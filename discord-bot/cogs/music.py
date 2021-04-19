@@ -1,3 +1,4 @@
+import math
 import discord
 import youtube_dl
 import asyncio
@@ -21,6 +22,10 @@ global song_queue
 song_queue = []
 global display_lyrics
 display_lyrics = True
+global now_playing
+now_playing = ""
+global vote_skip
+vote_skips = []
 
 
 class Music(commands.Cog):
@@ -98,7 +103,9 @@ class Music(commands.Cog):
         ):  # while song is playing or next song in queue is not url
             await asyncio.sleep(1)
         else:
-            song_queue.pop(0)
+            # updating the now_playing variable
+            global now_playing
+            now_playing = song_queue.pop(0)
 
         # downloading song into song.mp3
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -178,7 +185,7 @@ class Music(commands.Cog):
                         await voiceChannel.delete()
 
     @commands.command(
-        brief="stops the song", help="stops the song that is currently playing"
+        brief="stops the currently playing song", help="stops the song that is currently playing"
     )
     async def stop(self, ctx):
         if song_queue:
@@ -188,14 +195,50 @@ class Music(commands.Cog):
         voice.stop()
 
     @commands.command(
-        brief="skips the song", help="skips the song that is currently playing"
+        brief="skips the currently playing song",
+        help="skips the song that is currently playing, doesn't skip if there are no songs in the queue"
     )
-    async def skip(
-        self, ctx
-    ):  # this is the old stop command, only stops current song and doesn't clear queue
-        await ctx.send("Skipping song...")
-        voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        voice.stop()
+    async def skip(self, ctx):
+        if len(song_queue) is 0:
+            await ctx.send("Queue is empty, there is nothing to skip!")
+            return
+
+        if ctx.author.guild_permissions.administrator:
+            await ctx.send("Skipping song...")
+            voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+            voice.stop()
+        else:
+            await ctx.send("You don't have permission goober")
+
+    @commands.command(
+        brief="vote to skip the song",
+        help="starts a vote to skip the song that is currently playing, requires majority vote from in voice channel"
+    )
+    async def voteskip(self, ctx):
+        current_voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        if ctx.author.voice is None or ctx.author.voice.channel is not current_voice.channel:
+            await ctx.send("You need to join the voice channel first!")
+            return
+        if len(song_queue) is 0:
+            await ctx.send("Queue is empty, there is nothing to skip!")
+            return
+
+        member_count = len(current_voice.channel.members)
+        required = math.ceil(member_count / 2)
+        print(required)
+
+        if ctx.author.id in vote_skips:
+            await ctx.send("You already voted to skip!")
+            return
+        else:
+            vote_skips.append(ctx.author.id)
+            await ctx.send(f"You voted to skip the song! ({len(vote_skips)}/{required} votes)")
+
+        if len(vote_skips) >= required:
+            vote_skips.clear()
+            await ctx.send("Majority vote collected! Skipping song...")
+            current_voice.stop()
+
 
     @commands.command(brief="forces bot leave channel", help="forces bot leave channel")
     async def leave(self, ctx):
@@ -267,7 +310,7 @@ class Music(commands.Cog):
 
     @commands.command(
         brief="removes given voice channel",
-        help="removes give voice channel if it is empty, asks for verification \nUsage:!remove general",
+        help="removes given voice channel if it is empty, asks for verification \nUsage:!remove general",
     )
     async def remove(self, ctx, channel: str):
         channel = discord.utils.get(ctx.guild.channels, name=channel)
@@ -333,15 +376,23 @@ class Music(commands.Cog):
         idle_timer = seconds
         await ctx.send(f"The idle time was set to {seconds} seconds")
 
-    @commands.command()
+    @commands.command(
+        brief="displays the song queue",
+        help="displays a list of all the currently queued songs",
+    )
     async def queue(self, ctx):
-        for song in song_queue:
-            index = song_queue.index(song) + 1
-            soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
-            song_title = str(soup.title)
-            song_title = song_title.replace("<title>", "")
-            song_title = song_title.replace("</title>", "")
-            await ctx.send(f"#{index}: {song_title}")
+        if len(song_queue) is 0:
+            await ctx.send("Queue is empty! Try using the !play command.")
+        else:
+            embed = discord.Embed(title="Song Queue:")
+            for song in song_queue:
+                index = song_queue.index(song) + 1
+                soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
+                song_title = str(soup.title)
+                song_title = song_title.replace("<title>", "")
+                song_title = song_title.replace("</title>", "")
+                embed.add_field(name=f"Song #{index}:", value=f"{song_title}", inline=True)
+            await ctx.send(embed=embed)
 
     @commands.command(
         brief="displays song lyrics",
@@ -409,6 +460,25 @@ class Music(commands.Cog):
                 else:
                     await ctx.send("There is no lyrics available for this song :( :(")
 
+    @commands.command(
+            brief="displays currently playing song",
+            help="displays the title of the song currently playing",
+        )
+    async def nowplaying(self, ctx):
+        global now_playing
+        soup = BeautifulSoup(urllib.request.urlopen(now_playing), "html.parser")
+        song_title = str(soup.title)
+        song_title = song_title.replace("<title>", "")
+        song_title = song_title.replace("</title>", "")
+        if discord.utils.get(self.bot.voice_clients, guild=ctx.guild) is None:
+            await ctx.send("Bot is not currently in a voice channel! Try using the !play command.")
+        else:
+            voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        if voice.is_playing() or voice.is_paused():
+            embed = discord.Embed(title="Now Playing:", description=f"{song_title}")
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("No song is currently being played! Try using the !play command.")
 
 def setup(bot):
     bot.add_cog(Music(bot))
