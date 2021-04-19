@@ -29,7 +29,7 @@ class Memes(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
+    @commands.Cog.listener("on_message")
     async def trigger_words(self, message):
         # Whenever a user other than bot says "hi"
         if message.content == "hi":
@@ -70,7 +70,9 @@ class Memes(commands.Cog):
             await message.channel.send(message.author.mention + " www")
             await message.channel.send(await search_gifs("laughing"))
 
-    @commands.command(brief="sends a random meme", help="sends a random meme \nUsage: !meme")
+    @commands.command(
+        brief="sends a random meme", help="sends a random meme \nUsage: !meme"
+    )
     async def meme(self, ctx):
         await ctx.send(embed=await pyrandmeme())
 
@@ -78,7 +80,9 @@ class Memes(commands.Cog):
     async def lobsters(self, ctx):
         await ctx.send(file=discord.File("lobsters.gif"))
 
-    @commands.command(name="8ball", brief="ask a question and it will answer", help="\nUsage: !8ball")
+    @commands.command(
+        name="8ball", brief="ask a question and it will answer", help="\nUsage: !8ball"
+    )
     async def magic_eight_ball(self, ctx):
         response = [
             "It is certain.",
