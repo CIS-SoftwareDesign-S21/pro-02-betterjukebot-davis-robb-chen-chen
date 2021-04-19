@@ -184,7 +184,7 @@ class Music(commands.Cog):
                         await voiceChannel.delete()
 
     @commands.command(
-        brief="stops the song", help="stops the song that is currently playing"
+        brief="stops the currently playing song", help="stops the song that is currently playing"
     )
     async def stop(self, ctx):
         if song_queue:
@@ -194,13 +194,17 @@ class Music(commands.Cog):
         voice.stop()
 
     @commands.command(
-        brief="skips the song", help="skips the song that is currently playing"
+        brief="skips the currently playing song",
+        help="skips the song that is currently playing, doesn't skip if there are no songs in the queue"
     )
     async def skip(self, ctx):
-        # this is the old stop command, only stops current song and doesn't clear queue
-        await ctx.send("Skipping song...")
-        voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        voice.stop()
+        if len(song_queue) is 0:
+            await ctx.send("Queue is empty, there is nothing to skip!")
+            return
+        else:
+            await ctx.send("Skipping song...")
+            voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+            voice.stop()
 
     @commands.command(
         brief="vote to skip the song",
