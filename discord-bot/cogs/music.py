@@ -232,7 +232,7 @@ class Music(commands.Cog):
             return
         else:
             vote_skips.append(ctx.author.id)
-            await ctx.send(f"You voted to skip the song! ({len(vote_skips)}/{required} votes collected)")
+            await ctx.send(f"You voted to skip the song! ({len(vote_skips)}/{required} votes)")
 
         if len(vote_skips) >= required:
             vote_skips.clear()
