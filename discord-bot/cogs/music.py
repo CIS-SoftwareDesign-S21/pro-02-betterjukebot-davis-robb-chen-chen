@@ -343,13 +343,19 @@ class Music(commands.Cog):
         help="displays a list of all the currently queued songs",
     )
     async def queue(self, ctx):
-        for song in song_queue:
-            index = song_queue.index(song) + 1
-            soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
-            song_title = str(soup.title)
-            song_title = song_title.replace("<title>", "")
-            song_title = song_title.replace("</title>", "")
-            await ctx.send(f"#{index}: {song_title}")
+        if song_queue is None:
+            await ctx.send("Queue is empty! Try using the !play command.")
+        else:
+            embed = discord.Embed(title="Song Queue:")
+            embed.add_field(name="Lyrics:", value=f"{lyrics_send}\n\nClick [here]({song_url}) for full lyrics",)
+            for song in song_queue:
+                index = song_queue.index(song) + 1
+                soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
+                song_title = str(soup.title)
+                song_title = song_title.replace("<title>", "")
+                song_title = song_title.replace("</title>", "")
+                embed.add_field(name=f"Song #{index}:", value=f"{song_title}", inline=True)
+            await ctx.send(embed=embed)
 
     @commands.command(
         brief="displays song lyrics",
