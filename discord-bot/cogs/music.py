@@ -427,6 +427,8 @@ class Music(commands.Cog):
         if voice.is_playing:
             embed = discord.Embed(title="Now Playing:", description=f"{now_playing}")
             await ctx.send(embed=embed)
+        elif voice is None:
+            await ctx.send("Bot is currently not in a voice channel! Try using the !play command.")
         else:
             await ctx.send("No song is currently being played! Try using the !play command.")
 
