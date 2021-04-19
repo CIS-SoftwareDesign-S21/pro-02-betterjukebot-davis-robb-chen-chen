@@ -347,7 +347,6 @@ class Music(commands.Cog):
             await ctx.send("Queue is empty! Try using the !play command.")
         else:
             embed = discord.Embed(title="Song Queue:")
-            embed.add_field(name="Lyrics:", value=f"{lyrics_send}\n\nClick [here]({song_url}) for full lyrics",)
             for song in song_queue:
                 index = song_queue.index(song) + 1
                 soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
