@@ -21,6 +21,8 @@ global song_queue
 song_queue = []
 global display_lyrics
 display_lyrics = True
+global now_playing
+now_playing = ""
 
 
 class Music(commands.Cog):
@@ -107,6 +109,9 @@ class Music(commands.Cog):
             if file.endswith(".mp3"):
                 currentSong = file
                 print(currentSong)
+                # updating the now_playing variable
+                global now_playing
+                now_playing = currentSong
                 os.rename(file, "song.mp3")
 
         voice.play(discord.FFmpegPCMAudio("song.mp3"))
@@ -267,7 +272,7 @@ class Music(commands.Cog):
 
     @commands.command(
         brief="removes given voice channel",
-        help="removes give voice channel if it is empty, asks for verification \nUsage:!remove general",
+        help="removes given voice channel if it is empty, asks for verification \nUsage:!remove general",
     )
     async def remove(self, ctx, channel: str):
         channel = discord.utils.get(ctx.guild.channels, name=channel)
@@ -333,7 +338,10 @@ class Music(commands.Cog):
         idle_timer = seconds
         await ctx.send(f"The idle time was set to {seconds} seconds")
 
-    @commands.command()
+    @commands.command(
+        brief="displays the song queue",
+        help="displays a list of all the currently queued songs",
+    )
     async def queue(self, ctx):
         for song in song_queue:
             index = song_queue.index(song) + 1
@@ -409,6 +417,18 @@ class Music(commands.Cog):
                 else:
                     await ctx.send("There is no lyrics available for this song :( :(")
 
+    @commands.command(
+            brief="displays currently playing song",
+            help="displays the title of the song currently playing",
+        )
+    async def nowplaying(self, ctx):
+        global now_playing
+        voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        if voice.is_playing:
+            embed = discord.Embed(title="Now Playing:", description=f"{now_playing}")
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("No song is currently being played! Try using the !play command.")
 
 def setup(bot):
     bot.add_cog(Music(bot))
