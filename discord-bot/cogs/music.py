@@ -223,7 +223,9 @@ class Music(commands.Cog):
             return
 
         member_count = len(current_voice.channel.members)
-        required = int(member_count / 2)
+        required = member_count / 2
+        print(required)
+        required = int(required)
 
         if ctx.author.id in vote_skips:
             await ctx.send("You already voted to skip!")
