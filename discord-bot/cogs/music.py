@@ -201,10 +201,13 @@ class Music(commands.Cog):
         if len(song_queue) is 0:
             await ctx.send("Queue is empty, there is nothing to skip!")
             return
-        else:
+
+        if ctx.author.guild_permissions.administrator:
             await ctx.send("Skipping song...")
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
             voice.stop()
+        else:
+            await ctx.send("You don't have permission goober")
 
     @commands.command(
         brief="vote to skip the song",
@@ -212,7 +215,7 @@ class Music(commands.Cog):
     )
     async def voteskip(self, ctx):
         current_voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        if ctx.message.author.voice.channel is None or ctx.message.author.voice.channel is not current_voice.channel:
+        if ctx.author.voice.channel is None or ctx.author.voice.channel is not current_voice.channel:
             await ctx.send("You need to join the voice channel first!")
             return
         if len(song_queue) is 0:
@@ -222,11 +225,11 @@ class Music(commands.Cog):
         member_count = len(current_voice.channel.members)
         required = int(member_count / 2)
 
-        if ctx.message.author.id in vote_skips:
+        if ctx.author.id in vote_skips:
             await ctx.send("You already voted to skip!")
             return
         else:
-            vote_skips.append(ctx.message.author.id)
+            vote_skips.append(ctx.author.id)
             await ctx.send(f"You voted to skip the song! ({len(vote_skips)}/{required} votes collected)")
 
         if len(vote_skips) >= required:
