@@ -424,10 +424,11 @@ class Music(commands.Cog):
     async def nowplaying(self, ctx):
         global now_playing
         playing = now_playing.split("-")
-        voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        if voice is None:
-            await ctx.send("Bot is currently not in a voice channel! Try using the !play command.")
-        elif voice.is_playing:
+        if discord.utils.get(self.bot.voice_clients, guild=ctx.guild) is None:
+            await ctx.send("Bot is not currently in a voice channel! Try using the !play command.")
+        else:
+            voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        if voice.is_playing:
             embed = discord.Embed(title="Now Playing:", description=f"{playing[0]}")
             await ctx.send(embed=embed)
         else:
