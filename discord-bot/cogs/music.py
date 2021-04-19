@@ -23,6 +23,8 @@ global display_lyrics
 display_lyrics = True
 global now_playing
 now_playing = ""
+global vote_skip
+vote_skips = []
 
 
 class Music(commands.Cog):
@@ -194,12 +196,39 @@ class Music(commands.Cog):
     @commands.command(
         brief="skips the song", help="skips the song that is currently playing"
     )
-    async def skip(
-        self, ctx
-    ):  # this is the old stop command, only stops current song and doesn't clear queue
+    async def skip(self, ctx):
+        # this is the old stop command, only stops current song and doesn't clear queue
         await ctx.send("Skipping song...")
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         voice.stop()
+
+    @commands.command(
+        brief="vote to skip the song",
+        help="starts a vote to skip the song that is currently playing, requires majority vote"
+    )
+    async def voteskip(self, ctx):
+        current_voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        if ctx.message.author.voice.channel is not current_voice.channel:
+            await ctx.send("You need to join the voice channel first!")
+            return
+        if song_queue is None:
+            await ctx.send("Queue is empty, there is nothing to skip!")
+            return
+
+        member_count = len(current_voice.channel.members)
+        required = member_count / 2
+
+        if ctx.message.author.id in vote_skips:
+            await ctx.send("You already voted to skip!")
+            return
+        else:
+            vote_skips.append(ctx.message.author.id)
+            await ctx.send(f"You voted to skip the song! {len(vote_skips)}/{required} votes")
+
+        if len(vote_skips) >= required:
+            await ctx.send("Skipping song...")
+            current_voice.stop()
+
 
     @commands.command(brief="forces bot leave channel", help="forces bot leave channel")
     async def leave(self, ctx):
