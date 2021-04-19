@@ -423,13 +423,17 @@ class Music(commands.Cog):
         )
     async def nowplaying(self, ctx):
         global now_playing
-        playing = now_playing.split("-")
+        # copied from Ju-Hung's lyrics code
+        song_detail = now_playing.split("-")
+        # song_artist = song_detail[0]
+        song_title = song_detail[1]
+        song_title = song_title.replace(".mp3", "")
         if discord.utils.get(self.bot.voice_clients, guild=ctx.guild) is None:
             await ctx.send("Bot is not currently in a voice channel! Try using the !play command.")
         else:
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        if voice.is_playing():
-            embed = discord.Embed(title="Now Playing:", description=f"{playing[0]}")
+        if voice.is_playing() or voice.is_paused():
+            embed = discord.Embed(title="Now Playing:", description=f"{song_title}")
             await ctx.send(embed=embed)
         else:
             await ctx.send("No song is currently being played! Try using the !play command.")
