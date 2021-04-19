@@ -208,15 +208,15 @@ class Music(commands.Cog):
     )
     async def voteskip(self, ctx):
         current_voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        if ctx.message.author.voice.channel is not current_voice.channel:
+        if ctx.message.author.voice.channel is None or ctx.message.author.voice.channel is not current_voice.channel:
             await ctx.send("You need to join the voice channel first!")
             return
-        if song_queue is None:
+        if len(song_queue) is 0:
             await ctx.send("Queue is empty, there is nothing to skip!")
             return
 
         member_count = len(current_voice.channel.members)
-        required = member_count / 2
+        required = int(member_count / 2)
 
         if ctx.message.author.id in vote_skips:
             await ctx.send("You already voted to skip!")
@@ -226,6 +226,7 @@ class Music(commands.Cog):
             await ctx.send(f"You voted to skip the song! {len(vote_skips)}/{required} votes")
 
         if len(vote_skips) >= required:
+            vote_skips.clear()
             await ctx.send("Skipping song...")
             current_voice.stop()
 
@@ -371,7 +372,7 @@ class Music(commands.Cog):
         help="displays a list of all the currently queued songs",
     )
     async def queue(self, ctx):
-        if song_queue is None:
+        if len(song_queue) is 0:
             await ctx.send("Queue is empty! Try using the !play command.")
         else:
             embed = discord.Embed(title="Song Queue:")
