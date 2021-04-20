@@ -139,7 +139,7 @@ class Music(commands.Cog):
             search_result = musixmatch.matcher_track_get(song_title, song_artist)
             pprint(search_result)
 
-            song_artist = search_result["message"]["body"]["track"]["artist_name"]
+            song_artist = search_resul January 2018 to March 2021.t["message"]["body"]["track"]["artist_name"]
             song_title = search_result["message"]["body"]["track"]["track_name"]
             song_id = search_result["message"]["body"]["track"]["track_id"]
             song_album = search_result["message"]["body"]["track"]["album_name"]
@@ -419,7 +419,8 @@ class Music(commands.Cog):
         else:
             await ctx.send("I cannot understand your command :(")
 
-    @commands.command()
+    @commands.command(        brief="searches the lyrics",
+        help="searches for the lyrics given the song title and/or the artist",)
     async def searchlyrics(self, ctx, song_title: str, song_artist=None):
         search_channel = discord.utils.get(ctx.guild.channels, name="search-result")
         guild = ctx.message.guild
