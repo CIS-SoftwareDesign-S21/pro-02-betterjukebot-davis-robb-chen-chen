@@ -3,7 +3,8 @@ import os
 from discord.ext import commands
 from secrets import DISCORD_TOKEN
 
-bot = commands.Bot(command_prefix="!")
+intents = discord.Intents.all()
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 @bot.command(
