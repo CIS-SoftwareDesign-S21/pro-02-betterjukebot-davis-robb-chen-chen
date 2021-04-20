@@ -7,16 +7,25 @@ class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(
+        brief="Kicks mentioned user",
+        help="Kicks mentioned user \nUsage: !kick '@User'",
+    )
     async def kick(self, ctx, member: discord.Member, *, reason=None):
         await member.kick(reason=reason)
 
-    @commands.command()
+    @commands.command(
+        brief="Bans mentioned user",
+        help="Bans mentioned user \nUsage: !ban '@User'",
+    )
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         await member.ban(reason=reason)
         await ctx.send(f"Banned {member.mention}")
 
-    @commands.command()
+    @commands.command(
+        brief="Unbans mentioned user",
+        help="Unbans mentioned user \nUsage: !unban '@User'",
+    )
     async def unban(self, ctx, *, member):
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split("#")
@@ -29,7 +38,10 @@ class Moderation(commands.Cog):
                 await ctx.send(f"fUnbanned {user.mention}")
                 return
 
-    @commands.command()
+    @commands.command(
+        brief="Adds existing role to user",
+        help="Adds existing role to user, requires administrator permissions \nUsage: !addrole 'Role' '@User'",
+    )
     async def addrole(self, ctx, role: discord.Role, user: discord.Member):
         if ctx.author.guild_permissions.administrator:
             await user.add_roles(role)
@@ -37,7 +49,10 @@ class Moderation(commands.Cog):
         else:
             await ctx.send("You don't have permission goober")
 
-    @commands.command()
+    @commands.command(
+        brief="Removes role from user",
+        help="Removes role from user, requires administrator permissions \nUsage: !removerole 'Role' '@User'",
+    )
     async def removerole(self, ctx, role: discord.Role, user: discord.Member):
         if ctx.author.guild_permissions.administrator:
             await user.remove_roles(role)
@@ -45,7 +60,10 @@ class Moderation(commands.Cog):
         else:
             await ctx.send("You don't have permission goober")
 
-    @commands.command()
+    @commands.command(
+        brief="Counts how many messages users have made in the discord",
+        help="Counts how many messages users have made in the discord \nProviding channel is optional \nUsage: !participation *'Channel'",
+    )
     async def participation(self, ctx, channel=None):
         channel_list = []
         counter = 0
