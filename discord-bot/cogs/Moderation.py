@@ -87,7 +87,7 @@ class Moderation(commands.Cog):
                         channel_list.append(text_channel)
                         break
 
-        if len(channel_list) > 1 and channel != 1:
+        if len(channel_list) > 1 and channel != None:
             await ctx.send(f"Channel {channel} does not exist")
             return None
 
