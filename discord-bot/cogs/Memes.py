@@ -78,7 +78,7 @@ class Memes(commands.Cog):
 
     @commands.command(brief="sends a special gif", help="BRING IN THE DANCING LOBSTERS")
     async def lobsters(self, ctx):
-        await ctx.send(file=discord.File("lobsters.gif"))
+        await ctx.send(file=discord.File("discord-bot/lobsters.gif"))
 
     @commands.command(
         name="8ball", brief="ask a question and it will answer", help="\nUsage: !8ball"
