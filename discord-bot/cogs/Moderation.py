@@ -1,10 +1,5 @@
 import discord
 from discord.ext import commands
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-GIPHY_TOKEN = os.getenv('GIPHY_TOKEN')
 
 
 class Moderation(commands.Cog):
@@ -37,7 +32,10 @@ class Moderation(commands.Cog):
         for ban_entry in banned_users:
             user = ban_entry.user
 
-            if (user.name, user.discriminator) == (member_name, member_discriminator):
+            if (user.name, user.discriminator) == (
+                member_name,
+                member_discriminator,
+            ):
                 await ctx.guild.unban(user)
                 await ctx.send(f"fUnbanned {user.mention}")
                 return
@@ -49,7 +47,9 @@ class Moderation(commands.Cog):
     async def addrole(self, ctx, role: discord.Role, user: discord.Member):
         if ctx.author.guild_permissions.administrator:
             await user.add_roles(role)
-            await ctx.send(f"Successfully given {role.mention} to {user.mention}.")
+            await ctx.send(
+                f"Successfully given {role.mention} to {user.mention}."
+            )
         else:
             await ctx.send("You don't have permission goober")
 
@@ -60,7 +60,9 @@ class Moderation(commands.Cog):
     async def removerole(self, ctx, role: discord.Role, user: discord.Member):
         if ctx.author.guild_permissions.administrator:
             await user.remove_roles(role)
-            await ctx.send(f"Successfully removed {role.mention} from {user.mention}.")
+            await ctx.send(
+                f"Successfully removed {role.mention} from {user.mention}."
+            )
         else:
             await ctx.send("You don't have permission goober")
 

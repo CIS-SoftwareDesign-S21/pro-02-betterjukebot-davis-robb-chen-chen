@@ -1,11 +1,15 @@
 import discord
 import giphy_client
 import random
+import os
+from dotenv import load_dotenv
 from discord.ext import commands
-from secrets import GIPHY_TOKEN
 from giphy_client.rest import ApiException
 from pprint import pprint
 from pyrandmeme import *
+
+load_dotenv()
+GIPHY_TOKEN = os.getenv("GIPHY_TOKEN")
 
 #########################################################
 # Create an instance of the API class
@@ -59,7 +63,9 @@ class Memes(commands.Cog):
             await message.channel.send(await search_gifs("salute"))
 
         elif message.content == "goober":
-            await message.channel.send(message.author.mention + " You're a goober! www")
+            await message.channel.send(
+                message.author.mention + " You're a goober! www"
+            )
             await message.channel.send(await search_gifs("goober"))
 
         elif message.content == "lol":
@@ -76,12 +82,16 @@ class Memes(commands.Cog):
     async def meme(self, ctx):
         await ctx.send(embed=await pyrandmeme())
 
-    @commands.command(brief="sends a special gif", help="BRING IN THE DANCING LOBSTERS")
+    @commands.command(
+        brief="sends a special gif", help="BRING IN THE DANCING LOBSTERS"
+    )
     async def lobsters(self, ctx):
         await ctx.send(file=discord.File("discord-bot/lobsters.gif"))
 
     @commands.command(
-        name="8ball", brief="ask a question and it will answer", help="\nUsage: !8ball"
+        name="8ball",
+        brief="ask a question and it will answer",
+        help="\nUsage: !8ball",
     )
     async def magic_eight_ball(self, ctx):
         response = [
@@ -114,7 +124,9 @@ class Memes(commands.Cog):
 
 async def search_gifs(query):
     try:
-        response = api_instance.gifs_search_get(GIPHY_TOKEN, query, limit=5, rating="g")
+        response = api_instance.gifs_search_get(
+            GIPHY_TOKEN, query, limit=5, rating="g"
+        )
         lst = list(response.data)
         gif = random.choices(lst)
 
