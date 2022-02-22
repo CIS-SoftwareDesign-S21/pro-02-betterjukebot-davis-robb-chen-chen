@@ -1,10 +1,12 @@
 import discord
 import os
 from discord.ext import commands
-from secrets import DISCORD_TOKEN
+from dotenv import load_dotenv
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
+load_dotenv()
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 
 @bot.command(

@@ -4,13 +4,14 @@ import youtube_dl
 import asyncio
 import urllib.request
 import os
-from secrets import MUSIXMATCH_TOKEN
 from bs4 import BeautifulSoup
 from discord.ext import commands
 from musixmatch import Musixmatch
 from pprint import pprint
+from dotenv import load_dotenv 
 
-musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
+load_dotenv()
+MUSIXMATCH_TOKEN = os.getenv('MUSIXMATCH_TOKEN')
 
 global channel_default
 channel_default = "general"

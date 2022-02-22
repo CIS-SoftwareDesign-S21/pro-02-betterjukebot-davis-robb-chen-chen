@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
-from secrets import GIPHY_TOKEN
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+GIPHY_TOKEN = os.getenv('GIPHY_TOKEN')
 
 
 class Moderation(commands.Cog):
