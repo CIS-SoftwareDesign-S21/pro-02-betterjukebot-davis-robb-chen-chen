@@ -4,11 +4,11 @@ import youtube_dl
 import asyncio
 import urllib.request
 import os
+from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from discord.ext import commands
 from musixmatch import Musixmatch
 from pprint import pprint
-from dotenv import load_dotenv
 
 load_dotenv()
 MUSIXMATCH_TOKEN = os.getenv("MUSIXMATCH_TOKEN")
