@@ -8,10 +8,11 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 from musixmatch import Musixmatch
 from pprint import pprint
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 
 load_dotenv()
-MUSIXMATCH_TOKEN = os.getenv('MUSIXMATCH_TOKEN')
+MUSIXMATCH_TOKEN = os.getenv("MUSIXMATCH_TOKEN")
+musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
 
 global channel_default
 channel_default = "general"
@@ -34,7 +35,8 @@ class Music(commands.Cog):
         self.bot = bot
 
     @commands.command(
-        brief="repeats current song", help="repeats the song that is currently playing"
+        brief="repeats current song",
+        help="repeats the song that is currently playing",
     )
     async def repeat(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
@@ -76,7 +78,9 @@ class Music(commands.Cog):
 
         # defining voice channel and joining if not already connected
         print(channel_default)
-        voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel_default)
+        voiceChannel = discord.utils.get(
+            ctx.guild.voice_channels, name=channel_default
+        )
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         print(voiceChannel)
         if voice is None:
@@ -121,7 +125,9 @@ class Music(commands.Cog):
 
         # finding lyrics and sent to test channel
         if display_lyrics is True:
-            lyrics_channel = discord.utils.get(ctx.guild.text_channels, name="lyrics")
+            lyrics_channel = discord.utils.get(
+                ctx.guild.text_channels, name="lyrics"
+            )
             guild = ctx.message.guild
 
             if lyrics_channel is None:
@@ -137,15 +143,23 @@ class Music(commands.Cog):
             song_title = song_detail[1]
             song_title = song_title.replace(".mp3", "")
 
-            search_result = musixmatch.matcher_track_get(song_title, song_artist)
+            search_result = musixmatch.matcher_track_get(
+                song_title, song_artist
+            )
             pprint(search_result)
 
-            song_artist = search_result["message"]["body"]["track"]["artist_name"]
+            song_artist = search_result["message"]["body"]["track"][
+                "artist_name"
+            ]
             song_title = search_result["message"]["body"]["track"]["track_name"]
             song_id = search_result["message"]["body"]["track"]["track_id"]
             song_album = search_result["message"]["body"]["track"]["album_name"]
-            song_url = search_result["message"]["body"]["track"]["track_share_url"]
-            has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+            song_url = search_result["message"]["body"]["track"][
+                "track_share_url"
+            ]
+            has_lyrics = search_result["message"]["body"]["track"][
+                "has_subtitles"
+            ]
 
             if has_lyrics == 1:
                 lyrics_display = musixmatch.track_lyrics_get(song_id)
@@ -217,7 +231,9 @@ class Music(commands.Cog):
         help="starts a vote to skip the song that is currently playing, requires majority vote from in voice channel",
     )
     async def voteskip(self, ctx):
-        current_voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        current_voice = discord.utils.get(
+            self.bot.voice_clients, guild=ctx.guild
+        )
         if (
             ctx.author.voice is None
             or ctx.author.voice.channel is not current_voice.channel
@@ -246,7 +262,9 @@ class Music(commands.Cog):
             await ctx.send("Majority vote collected! Skipping song...")
             current_voice.stop()
 
-    @commands.command(brief="forces bot leave channel", help="forces bot leave channel")
+    @commands.command(
+        brief="forces bot leave channel", help="forces bot leave channel"
+    )
     async def leave(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_connected():
@@ -310,7 +328,9 @@ class Music(commands.Cog):
             await guild.create_voice_channel(channel)
             await ctx.send("Channel created")
             global created_channels
-            created_channels.append(discord.utils.get(ctx.guild.channels, name=channel))
+            created_channels.append(
+                discord.utils.get(ctx.guild.channels, name=channel)
+            )
         else:
             await ctx.send(f'Channel "{channel}" already exists')
 
@@ -393,7 +413,9 @@ class Music(commands.Cog):
             embed = discord.Embed(title="Song Queue:")
             for song in song_queue:
                 index = song_queue.index(song) + 1
-                soup = BeautifulSoup(urllib.request.urlopen(song), "html.parser")
+                soup = BeautifulSoup(
+                    urllib.request.urlopen(song), "html.parser"
+                )
                 song_title = str(soup.title)
                 song_title = song_title.replace("<title>", "")
                 song_title = song_title.replace("</title>", "")
@@ -425,7 +447,9 @@ class Music(commands.Cog):
         help="searches for the lyrics given the song title and/or the artist",
     )
     async def searchlyrics(self, ctx, song_title: str, song_artist=None):
-        search_channel = discord.utils.get(ctx.guild.channels, name="search-result")
+        search_channel = discord.utils.get(
+            ctx.guild.channels, name="search-result"
+        )
         guild = ctx.message.guild
 
         if song_title == "clear" and song_artist is None:
@@ -438,18 +462,30 @@ class Music(commands.Cog):
                     ctx.guild.text_channels, name="search-result"
                 )
             # search for lyrics
-            search_result = musixmatch.matcher_track_get(song_title, song_artist)
+            search_result = musixmatch.matcher_track_get(
+                song_title, song_artist
+            )
             status_code = search_result["message"]["header"]["status_code"]
 
             if status_code == 404:
                 await ctx.send("Cannot find lyrics for this song :(")
             else:
-                song_artist = search_result["message"]["body"]["track"]["artist_name"]
-                song_title = search_result["message"]["body"]["track"]["track_name"]
+                song_artist = search_result["message"]["body"]["track"][
+                    "artist_name"
+                ]
+                song_title = search_result["message"]["body"]["track"][
+                    "track_name"
+                ]
                 song_id = search_result["message"]["body"]["track"]["track_id"]
-                song_album = search_result["message"]["body"]["track"]["album_name"]
-                song_url = search_result["message"]["body"]["track"]["track_share_url"]
-                has_lyrics = search_result["message"]["body"]["track"]["has_subtitles"]
+                song_album = search_result["message"]["body"]["track"][
+                    "album_name"
+                ]
+                song_url = search_result["message"]["body"]["track"][
+                    "track_share_url"
+                ]
+                has_lyrics = search_result["message"]["body"]["track"][
+                    "has_subtitles"
+                ]
 
                 # check if has lyrics
                 if has_lyrics == 1:
@@ -469,7 +505,9 @@ class Music(commands.Cog):
                     await ctx.send("Lyrics found! Please check search result")
                     await search_channel.send(embed=embed)
                 else:
-                    await ctx.send("There is no lyrics available for this song :( :(")
+                    await ctx.send(
+                        "There is no lyrics available for this song :( :("
+                    )
 
     @commands.command(
         brief="displays currently playing song",
@@ -488,7 +526,9 @@ class Music(commands.Cog):
         else:
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_playing() or voice.is_paused():
-            embed = discord.Embed(title="Now Playing:", description=f"{song_title}")
+            embed = discord.Embed(
+                title="Now Playing:", description=f"{song_title}"
+            )
             await ctx.send(embed=embed)
         else:
             await ctx.send(
