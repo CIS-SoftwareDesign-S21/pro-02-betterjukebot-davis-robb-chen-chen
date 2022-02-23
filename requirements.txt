@@ -5,10 +5,12 @@ Automat==0.8.0
 beautifulsoup4==4.9.3
 black==22.1.0
 blinker==1.4
+bpyutils==0.3.0
 certifi==2020.12.5
 cffi==1.14.5
 chardet==4.0.0
 click==8.0.4
+cloud-init==21.4
 colorama==0.4.3
 command-not-found==0.3
 configobj==5.0.6
@@ -45,6 +47,7 @@ oauthlib==3.1.0
 packaging==21.3
 pathspec==0.9.0
 pip-review==1.1.1
+pipupgrade==1.12.0
 platformdirs==2.5.1
 pyasn1==0.4.2
 pyasn1-modules==0.2.1
@@ -60,7 +63,7 @@ pyparsing==3.0.7
 pyrandmeme==0.0.6
 pyrsistent==0.15.5
 pyserial==3.4
-python-apt==2.0.0
+python-apt==2.0.0+ubuntu0.20.4.7
 python-dateutil==2.8.1
 python-debian===0.1.36ubuntu1
 python-dotenv==0.19.2
