@@ -12,7 +12,7 @@ from pprint import pprint
 
 load_dotenv()
 MUSIXMATCH_TOKEN = os.getenv("MUSIXMATCH_TOKEN")
-musixmatch = Musixmatch(MUSIXMATCH_TOKEN)
+musixmatch = Musixmatch("MUSIXMATCH_TOKEN")
 
 global channel_default
 channel_default = "general"
