@@ -4,10 +4,8 @@ import youtube_dl
 import asyncio
 import urllib.request
 import os
-from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from discord.ext import commands
-from musixmatch import Musixmatch
 from pprint import pprint
 
 load_dotenv()
